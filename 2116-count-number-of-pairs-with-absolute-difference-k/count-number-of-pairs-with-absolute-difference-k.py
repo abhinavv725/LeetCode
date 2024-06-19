@@ -3,14 +3,7 @@ class Solution:
         map={}
         cnt=0
         for i in range(len(nums)):
-            temp=(k+nums[i])
-            temp2=(nums[i]-k)
-            if(temp in map):
-                cnt+=map[temp]
-            if(temp2 in map):
-                cnt+=map[temp2]
-            if(nums[i] not in map):
-                map[nums[i]]=1
-            else:
-                map[nums[i]]+=1
+            cnt+=map.get(k+nums[i],0) + map.get(nums[i]-k,0)
+            
+            map[nums[i]]=map.get(nums[i],0)+1
         return cnt
