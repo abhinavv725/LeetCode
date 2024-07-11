@@ -16,18 +16,22 @@ class Solution {
         
         Queue<Pair> q = new LinkedList<>();
         int[][] vis = new int[n][m];
-        
+        int cntFresh=0;
         for(int i=0;i<n;i++){
             for(int j=0;j<m;j++){
                 if(grid[i][j]==2){
                     q.add(new Pair(i,j,0));
                     vis[i][j]=2;
                 }
+                if(grid[i][j]==1){
+                    cntFresh++;
+                }
             }
         }
         int tm=0;
         int[] drow={-1,0,1,0};
         int[] dcol={0,1,0,-1};
+        int cnt=0;
         while(!q.isEmpty()){
             int r = q.peek().row;
             int c = q.peek().col;
@@ -41,17 +45,12 @@ class Solution {
                 if(nrow>=0 && nrow<n && ncol>=0 && ncol<m && vis[nrow][ncol]==0 && grid[nrow][ncol]==1){
                     q.add(new Pair(nrow,ncol,t+1));
                     vis[nrow][ncol]=2;
+                    cnt++;
                 }
             }
             
         }
-        for(int i=0;i<n;i++){
-            for(int j=0;j<m;j++){
-                if(vis[i][j]!=2 && grid[i][j]==1){
-                    return -1;
-                }
-            }
-        }
+        if(cntFresh-cnt>0)return -1;
         
         return tm;
         
