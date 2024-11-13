@@ -1,31 +1,27 @@
+import java.util.*;
 class Solution {
     
-    public int helper(int[] nums){
-        int n=nums.length;
+    public int solve(int[] nums,int[] dp, int i){
         
-        int[] dp= new int[n];
+        if(i==0)return nums[i];
+        if(i<0)return 0;
+        if(dp[i]!=-1)return dp[i];
         
-        dp[0]=nums[0];
-        if(n<=1){
-            return dp[0];
-        }
-        dp[1]=Math.max(nums[1],nums[0]);
-        
-        
-        for(int i=2;i<n;i++){
-            dp[i]=Math.max(dp[i-1],nums[i]+dp[i-2]);
-        }
-        return dp[n-1];
-        
+        return dp[i]=Math.max(nums[i]+solve(nums, dp, i-2), 0+solve(nums,dp,i-1));
     }
     
     public int rob(int[] nums) {
-        if(nums.length<=1){
-            return nums[0];
-        }
-        int[] newArray1 = Arrays.copyOfRange(nums, 1, nums.length);
-        int[] newArray2 = Arrays.copyOfRange(nums, 0, nums.length-1);
-        return Math.max(helper(newArray1),helper(newArray2));
+        int i = nums.length;
+        if(i==1)return nums[0];
+        int[] dp1 = new int[i+1];
+        Arrays.fill(dp1,-1);
+        int[] dp2 = new int[i+1];
+        Arrays.fill(dp2,-1);
+        
+        int m1= solve(Arrays.copyOfRange(nums,0,i-1), dp1, i-2);
+        int m2= solve(Arrays.copyOfRange(nums,1,i), dp2, i-2);
+        
+        return Math.max(m1,m2);
         
     }
 }
