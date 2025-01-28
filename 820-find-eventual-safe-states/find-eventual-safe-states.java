@@ -6,12 +6,12 @@ class Solution {
         map.put(i, false);
         for(int neighbour: graph[i]){
             if(solve(neighbour,graph,map)==false){
-                return map.get(i);
+                return false;
             }
         }
 
         map.put(i, true);
-        return map.get(i);
+        return true;
 
     }
     public List<Integer> eventualSafeNodes(int[][] graph) {
