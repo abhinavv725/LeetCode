@@ -1,24 +1,32 @@
 class Solution {
-    
-    public boolean solve(int[] nums, int ind, int target,Boolean[][] dp){
-        if(target==0)return true;
-        if(ind<0 || target<0)return false;
-        if(dp[ind][target]!=null)return dp[ind][target];
-        boolean take = solve(nums, ind-1,target-nums[ind],dp);
-        boolean notTake = solve(nums, ind-1,target,dp);
+    private boolean solve(int i,int sum, int target, int[] nums){
+        if(i<0 || sum>target)
+            return false;
         
-        return dp[ind][target]=take || notTake;
+        if(sum==target)
+            return true;
+        
+        boolean take = solve(i-1, sum+nums[i], target, nums);
+        boolean notTake = solve(i-1, sum, target, nums);
+        return take || notTake;
     }
-    
     public boolean canPartition(int[] nums) {
-        int n=nums.length;
-        int sum=0;
-        for(int i=0;i<n;i++){
-            sum+=nums[i];
+        int sum = 0;
+        for(int i: nums){
+            sum+=i;
         }
-        if(sum%2!=0)return false;
-        Boolean[][] dp = new Boolean[n+1][(sum/2)+1];
-        return solve(nums, n-1, sum/2,dp);
-        
+        if(sum%2!=0){
+            return false;
+        }
+        int n=nums.length;
+        int target = sum/2;
+        boolean[] dp = new boolean[target+1];
+        dp[0]=true;
+        for(int num: nums){
+            for(int j=target;j>=num;j--){
+                dp[j]=dp[j] || dp[j-num];
+            }
+        }
+        return dp[target];
     }
 }
