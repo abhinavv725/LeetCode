@@ -7,13 +7,15 @@ class Solution {
                 nums[i]=0;
             }
         }
-        int[] ans = new int[n];
         int index=0;
         for(int i=0;i<n;i++){
             if(nums[i]!=0){
-                ans[index++]=nums[i];
+                nums[index++] = nums[i];
             }
         }
-        return ans;
+        while(index<n){
+            nums[index++]=0;
+        }
+        return nums;
     }
 }
