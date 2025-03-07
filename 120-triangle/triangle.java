@@ -1,21 +1,17 @@
 class Solution {
-    
-    public int solve(int n,List<List<Integer>> triangle, int currRow, int currI,int[][] dp){
-        if(dp[currRow][currI]!=-1)return dp[currRow][currI];
-        
-        if(currRow==n-1)return triangle.get(currRow).get(currI);
-        
-        if(currI>triangle.get(currRow).size())return 0;
-        
-        return dp[currRow][currI]=triangle.get(currRow).get(currI)+
-            Math.min(solve(n,triangle, currRow+1, currI,dp), 
-                     solve(n,triangle, currRow+1, currI+1,dp));
-    }
-    
     public int minimumTotal(List<List<Integer>> triangle) {
-        int[][] dp =new int[triangle.size()][triangle.size()];
-        for(int[] row: dp)
-            Arrays.fill(row, -1);
-        return solve(triangle.size(), triangle, 0,0,dp);
+        int n=triangle.size();
+        int m = triangle.get(n-1).size();
+
+        int[] dp = new int[m];
+        for(int i=0;i<m;i++){
+            dp[i]=triangle.get(n-1).get(i);
+        }
+        for(int i=n-2;i>=0;i--){
+            for(int j=0;j<=i;j++){
+                dp[j]= triangle.get(i).get(j)+Math.min(dp[j], dp[j+1]);
+            }
+        }
+        return dp[0];
     }
 }
