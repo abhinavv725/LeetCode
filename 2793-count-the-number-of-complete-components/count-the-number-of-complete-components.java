@@ -1,49 +1,47 @@
 class Solution {
-    private boolean isConnected(int j, List<List<Integer>> adj, boolean[] vis, int n){
+    private boolean isComplete(int src, List<List<Integer>> adj, 
+        boolean[] vis){
         int nodes=1;
-        int[] degree = new int[n];
-        Queue<Integer> q = new LinkedList<>();
-        q.add(j);
-        vis[j]=true;
+        int edges=0;
+
+        Queue<Integer> q= new LinkedList<>();
+        q.add(src);vis[src]=true;
         while(!q.isEmpty()){
-            int node = q.poll();
-            for(int nei: adj.get(node)){
-                degree[node]++;
+            int n = q.poll();
+            for(int nei: adj.get(n)){
+                edges++;
                 if(!vis[nei]){
                     q.add(nei);
-                    vis[nei]=true;
                     nodes++;
+                    vis[nei]=true;
                 }
             }
         }
-        for(int i=0;i<n;i++){
-            if(degree[i]==0)
-                continue;
-            if(degree[i]!=0 && degree[i]!=nodes-1){
-                return false;
-            }
-        }
-        return true;
+        return (edges/2) == (nodes *(nodes-1))/2;
+
     }
-
-
     public int countCompleteComponents(int n, int[][] edges) {
         List<List<Integer>> adj = new ArrayList<>();
+
         for(int i=0;i<n;i++){
             adj.add(new ArrayList<>());
         }
+        int res=0;
         boolean[] vis = new boolean[n];
-        for(int[] edge: edges){
-            adj.get(edge[0]).add(edge[1]);
-            adj.get(edge[1]).add(edge[0]);
+        for(int[] e: edges){
+            adj.get(e[0]).add(e[1]);
+            adj.get(e[1]).add(e[0]);
         }
-        int ans=0;
+
         for(int i=0;i<n;i++){
-            if(!vis[i]){
-                if(isConnected(i, adj, vis,n))
-                    ans++;
+            if(vis[i]==false){
+                if(isComplete(i, adj, vis)){
+                    res++;
+                }
             }
         }
-        return ans;
+
+
+        return res;
     }
 }
