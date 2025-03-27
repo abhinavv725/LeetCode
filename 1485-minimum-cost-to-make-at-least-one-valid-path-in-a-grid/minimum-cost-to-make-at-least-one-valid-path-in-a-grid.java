@@ -23,6 +23,9 @@ class Solution {
                     if(weight < arr[nI][nJ]){
                         pq.add(new int[] {weight, nI, nJ});
                         arr[nI][nJ] = weight;
+                        if(nI ==grid.length && nJ == grid[0].length){
+                            return;
+                        }
                     }
                 
                 }
