@@ -1,27 +1,21 @@
 class Solution {
-    private int findNode(int u, int[] parent){
-        if(parent[u]==u){
-            return u;
-        }
-        return parent[u]=findNode(parent[u], parent);
+    
+    private int findParent(int n, int[] parent){
+        return parent[n]==n ? n : findParent(parent[n], parent);
     }
-
-    boolean ifUnion(int u, int v,int[] parent,int[] rank){
-        int rootU = findNode(u,parent);
-        int rootV = findNode(v, parent);
-
-        //both share the same root node, hence they are in a cycle
-        if(rootU==rootV)
+    private boolean union(int x, int y, int[] rank, int[] parent){
+        int xSet = findParent(x, parent), ySet = findParent(y, parent);
+        if(xSet==ySet)
             return false;
-        if(rank[rootU]>rank[rootV]){
-            parent[rootV]=rootU;
-        }else if(rank[rootU]<rank[rootV]){
-            parent[rootU]=rootV;
-        }else{
-            parent[rootV] = rootU;
-            rank[rootU]++;
-        }
         
+        if(rank[xSet]> rank[ySet])
+            parent[ySet] = xSet;
+        else{
+            parent[xSet] = ySet;
+            if(rank[xSet]==rank[ySet])
+                rank[xSet]++;
+        }
+
         return true;
 
     }
@@ -29,20 +23,19 @@ class Solution {
         int n = edges.length;
         int[] parent = new int[n+1];
         int[] rank = new int[n+1];
-
-        for(int i=0;i<n;i++){
-            rank[i]=0;
+        for(int i=1;i<=n;i++){
             parent[i]=i;
         }
-
-        for(int[] edge: edges){
-            int u = edge[0];
-            int v = edge[1];
-            if(!ifUnion(u,v,parent,rank)){
-                return edge;
+        for(int[] e: edges){
+            int u = e[0];
+            int v = e[1];
+            if(findParent(u, parent) == findParent(v, parent)){
+                return e;
             }
-            
+             union(u,v, rank, parent);
+
+
         }
-        return new int[0];
+        return new int[] {};
     }
 }
