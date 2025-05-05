@@ -1,44 +1,41 @@
 class Solution {
-    public String convert(String s, int numRows) {
-        if(numRows==1 || s.length()<=numRows)
-            return s;
-        StringBuilder sb = new StringBuilder();
-        char[][] mat = new char[numRows][s.length()+1];
-        for(char[] a: mat){
-            Arrays.fill(a, '*');
+    public String convert(String str, int numRows) {
+        if(str.length()<=numRows || numRows==1){
+            return str;
         }
-        int i=0, j=0;
-        boolean down=true;
+        StringBuilder sb = new StringBuilder();
+        char[][] image = new char[numRows][str.length()];
 
-        for(int t=0;t<s.length() && i>=0 && i< numRows && j<s.length()+1;t++){
-            mat[i][j]=s.charAt(t);
-            if(down){
+        for(char[] c: image){
+            Arrays.fill(c, '*');
+        }
+        int i=0,j=0;
+        boolean goingDown=true;
+        for(int t=0;t<str.length();t++){
+            image[i][j] = str.charAt(t);
+            if(goingDown){
                 if(i==numRows-1){
-                    down=false;
+                    goingDown=false;
                     i--;
                     j++;
+
                 }else{
                     i++;
                 }
-                
             }else{
                 if(i==0){
-                    down=true;
+                    goingDown=true;
                     i++;
                 }else{
                     i--;
-                j++;
-
+                    j++;
                 }
-                
-                
             }
-
         }
         for( i=0;i<numRows;i++){
-            for( j=0;j<s.length()+1;j++){
-                if(mat[i][j]!='*'){
-                    sb.append(mat[i][j]);
+            for( j=0;j<str.length();j++){
+                if(image[i][j]!='*'){
+                    sb.append(image[i][j]);
                 }
             }
         }
