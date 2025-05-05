@@ -1,37 +1,44 @@
 class Solution {
-    private int lower_bound(int[] nums, int start, int target){
-        int low = start, high = nums.length;
-        while(low<high){
-            int mid = (low+high)/2;
-            if(nums[mid]<target)
-                low = mid+1;
-            else
-                high = mid;
+    private int findlower(int[] nums, int start, int target){
+        int end = nums.length;
+        while(start<end){
+            int mid = (start+end)/2;
+            if(nums[mid]<target){
+                start=mid+1;
+            }else{
+                end=mid;
+            }   
         }
-        return low;
+        return start;
     }
-    private int upper_bound(int[] nums, int start, int target){
-        int low = start, high = nums.length;
-        while(low<high){
-            int mid = (low+high)/2;
-            if(nums[mid]<=target)
-                low = mid+1;
-            else
-                high = mid;
+    private int findUpper(int[] nums, int start, int target){
+        int end = nums.length;
+        while(start<end){
+            int mid = (start+end)/2;
+            if(nums[mid]<=target){
+                start=mid+1;
+            }else{
+                end=mid;
+            }   
         }
-        return low;
+        return start;
     }
     public long countFairPairs(int[] nums, int lower, int upper) {
         Arrays.sort(nums);
         long ans=0;
 
         for(int i=0;i<nums.length;i++){
-            int left = lower_bound(nums, i+1, lower-nums[i]);
+            int low = findlower(nums, i+1, lower-nums[i]);
+            int up = findUpper(nums, i+1, upper-nums[i]);
 
-            int right = upper_bound(nums, i+1, upper-nums[i]);
-
-            ans += (right-left);
+            ans+= (up-low);
         }
+
+
+
+
         return ans;
+
+
     }
 }
