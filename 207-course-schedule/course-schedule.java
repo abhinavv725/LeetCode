@@ -1,27 +1,39 @@
 class Solution {
-    public boolean canFinish(int V, int[][] p) {
-        Queue<Integer> q= new LinkedList<>();
-        int[] indegree= new int[V];
-        
-        for(int i=0;i<p.length;i++){
-            indegree[p[i][1]]++;
-        }
-        
-        for(int i=0;i<V;i++){
-            if(indegree[i]==0)q.offer(i);
-        }
-        while(!q.isEmpty()){
-            int node = q.poll();
-            for(int i=0;i<p.length;i++){
-                if(node==p[i][0]){
-                    indegree[p[i][1]]--;
-                    if(indegree[p[i][1]]==0)q.offer(p[i][1]);
+    private boolean dfs(int node, List<List<Integer>> adj,boolean[] vis, boolean[] temp){
+        vis[node]=true;
+        temp[node] =true;
+        for(int nei: adj.get(node)){
+            if(temp[nei])
+                return false;
+            if(!vis[nei]){
+                if(dfs(nei, adj, vis, temp)==false){
+                    return false;
                 }
             }
+
         }
-        for(int i=0;i<V;i++){
-            if(indegree[i]!=0)return false;
+        temp[node] =false;
+        return true;
+    }
+    public boolean canFinish(int n, int[][] prerequisites) {
+        List<List<Integer>> adj = new ArrayList<>();
+        for(int i=0;i<n;i++){
+            adj.add(new ArrayList<>());
+        }
+
+        for(int[]p : prerequisites){
+            adj.get(p[0]).add(p[1]);
+        }
+
+        boolean[] vis = new boolean[n];
+        for(int i=0;i<n;i++){
+            if(vis[i]==false){
+                if(dfs(i, adj, vis, new boolean[n])==false)
+                    return false;
+            }
         }
         return true;
+
+        
     }
 }
