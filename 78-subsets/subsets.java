@@ -1,20 +1,21 @@
 class Solution {
-    private void check(int i, int[] nums, List<Integer> temp, List<List<Integer>> ans){
-        if(i>=nums.length){
+    List<List<Integer>> ans = new ArrayList<>();
+
+    private void dfs(int i, int[] nums, List<Integer> temp){
+        if(i==nums.length){
             ans.add(new ArrayList<>(temp));
-            return ;
+            return;
         }
         temp.add(nums[i]);
-        
-        check(i+1, nums, temp, ans);
+        dfs(i+1, nums, temp);
         temp.remove(temp.size()-1);
-        check(i+1, nums, temp, ans);
+        dfs(i+1, nums, temp);
+
 
     }
 
     public List<List<Integer>> subsets(int[] nums) {
-        List<List<Integer>> ans = new ArrayList<>();
-        check(0, nums, new ArrayList<Integer>(), ans);
+        dfs(0, nums, new ArrayList<>());
         return ans;
     }
 }
