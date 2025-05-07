@@ -10,25 +10,28 @@
  */
 class Solution {
     public ListNode oddEvenList(ListNode head) {
-        ListNode dummyOdd = new ListNode(-1);
-        
-        ListNode dummyEven = new ListNode(-1);
-        ListNode curr = head, currEven =dummyEven, currOdd = dummyOdd;
+        ListNode dummOdd = new ListNode(-1);
+        ListNode dummEven = new ListNode(-1);
+        ListNode currOdd = dummOdd, currEven = dummEven, curr = head;
         int i=1;
         while(curr!=null){
             if(i%2==0){
-                currEven.next = curr;
-                currEven = currEven.next;
+                currEven.next=curr;
+                currEven=currEven.next;
 
             }else{
-                currOdd.next = curr;
-                currOdd = currOdd.next;
+                currOdd.next=curr;
+                currOdd=currOdd.next;
             }
-            i++;
             curr=curr.next;
+            i++;
         }
         currEven.next=null;
-        currOdd.next =  dummyEven.next;
-        return dummyOdd.next;
+        currOdd.next=null;
+        currOdd.next=dummEven.next;
+
+
+        return dummOdd.next;
+        
     }
 }
