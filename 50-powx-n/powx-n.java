@@ -1,21 +1,18 @@
 class Solution {
-    private double pow(double x, long n){
-        if(n==0)
-            return 1;
-        
-        double half = pow(x, n/2);
-        double res = half*half;
+    private double findPower(double x, long n){
+        if(x==0)    return 0;
+        if(n==0)    return 1;
+
+        double res = findPower(x, n/2);
+        res=res*res;
         if(n%2==1){
-            res =res*x;
+            res *= x;
         }
         return res;
     }
     public double myPow(double x, int n) {
-        long N =n;
-        if(N<0){
-            x=1/x;
-            N= -N;
-        }
-        return pow(x, N);
+        long N=n;
+        double result = findPower(x, Math.abs(N));
+        return (n>=0) ? result : 1/result;
     }
 }
