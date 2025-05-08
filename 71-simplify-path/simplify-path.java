@@ -13,8 +13,8 @@ class Solution {
             
        } 
        StringBuilder sb = new StringBuilder();
-       for(String folder: st){
-        sb.append("/").append(folder);
+       while(!st.isEmpty()){
+        sb.insert(0, "/"+st.pop());
        }
 
        return sb.length()==0?"/": sb.toString();
