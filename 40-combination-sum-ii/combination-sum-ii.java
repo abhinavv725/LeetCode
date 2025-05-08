@@ -1,28 +1,26 @@
 class Solution {
-    List<List<Integer>> ans = new ArrayList<>();
-    private void check(int i, int[]arr, int target, List<Integer> temp){
+    List<List<Integer>> ans;
+    private void generateCombinations(int start, int[] candidates, int target, List<Integer> temp){
         if(target<0)
             return;
-        if(target == 0){
+        if(target==0){
             ans.add(new ArrayList<>(temp));
             return;
         }
-
-        for(int j=i;j<arr.length;j++){
-            if(j>i && arr[j]==arr[j-1])
+        for(int i=start;i<candidates.length;i++){
+            if(i>start && candidates[i]==candidates[i-1])
                 continue;
-            temp.add(arr[j]);
-            
-            check(j+1, arr, target-arr[j], temp);
+
+            temp.add(candidates[i]);
+            generateCombinations(i+1, candidates, target-candidates[i], temp );
             temp.remove(temp.size()-1);
-
         }
-
     }
-
     public List<List<Integer>> combinationSum2(int[] candidates, int target) {
         Arrays.sort(candidates);
-        check(0, candidates, target,new ArrayList<>());
+        ans = new ArrayList<>();
+
+        generateCombinations(0, candidates, target, new ArrayList<>());
         return ans;
     }
 }
