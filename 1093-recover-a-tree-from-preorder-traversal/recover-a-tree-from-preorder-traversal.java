@@ -1,28 +1,51 @@
-
 class Solution {
-    private int index = 0;
-    private TreeNode dfs(String s, int depth){
-        int n=s.length(), num=0,d=0;
-        int tempI= index;
-        while(tempI<n && s.charAt(tempI)=='-'){
-            tempI++;
-            d++;
+    public TreeNode recoverFromPreorder(String s) {
+        Stack<TreeNode> st = new Stack<>();
+        int ind = 0;
+
+        // Traverse the entire input string
+        while (ind < s.length()) {
+            int depth = 0;
+
+            // Count the number of dashes to determine the depth of the node
+            while (ind < s.length() && s.charAt(ind) == '-') {
+                depth++;
+                ind++;
+            }
+
+            // Read the numeric value of the node
+            int val = 0;
+            while (ind < s.length() && Character.isDigit(s.charAt(ind))) {
+                val = val * 10 + (s.charAt(ind) - '0');
+                ind++;
+            }
+
+            // Create a new TreeNode with the parsed value
+            TreeNode node = new TreeNode(val);
+
+            // Ensure the stack's size matches the current node's depth
+            while (st.size() > depth) {
+                st.pop();
+            }
+
+            // If the parent node exists, attach the current node to it
+            if (!st.isEmpty()) {
+                if (st.peek().left == null) {
+                    st.peek().left = node;
+                } else {
+                    st.peek().right = node;
+                }
+            }
+
+            // Push the current node to the stack
+            st.push(node);
         }
-        if(d!=depth){
-            return null;
+
+        // The root of the tree will be at the bottom of the stack
+        while (st.size() > 1) {
+            st.pop();
         }
-        index=tempI;
-        while(index<n && Character.isDigit(s.charAt(index))){
-            
-            num=num*10+s.charAt(index)-'0';
-            index++;
-        }
-        TreeNode node =new TreeNode(num);
-        node.left=dfs(s, depth+1);
-        node.right=dfs(s, depth+1);
-        return node;
-    }
-    public TreeNode recoverFromPreorder(String traversal) {
-        return dfs(traversal,0);
+
+        return st.peek();
     }
 }
