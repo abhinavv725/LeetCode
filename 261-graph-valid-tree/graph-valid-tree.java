@@ -1,16 +1,13 @@
 class Solution {
-    private boolean dfs(int node, int parent, List<List<Integer>> adj, boolean[] vis){
+    private boolean dfs(int node, int parent,  List<List<Integer>> adj, boolean[] vis){
         vis[node]=true;
-        for(int nei : adj.get(node)){
-            if(vis[nei] && nei!=parent){
+        for(int nei: adj.get(node)){
+            if(vis[nei] && nei!=parent)
                 return false;
-            }else if(vis[nei] && nei==parent){
+            if(vis[nei] && nei==parent)
                 continue;
-            }else{
-                if(dfs(nei, node, adj, vis)==false)
-                    return false;
-            }
-
+            if(dfs(nei, node, adj, vis)==false)
+                return false;
         }
         return true;
     }
@@ -24,12 +21,14 @@ class Solution {
             adj.get(e[1]).add(e[0]);
         }
         boolean[] vis = new boolean[n];
-
-        boolean ans=  dfs(0,-1, adj, vis);
-        for(int i=0;i<n;i++){
+        if(dfs(0, -1,adj, vis)==false){
+            return false;
+        }
+        for(int i=1;i<n;i++){
             if(vis[i]==false)
                 return false;
         }
-        return ans;
+        return true;
+
     }
 }
