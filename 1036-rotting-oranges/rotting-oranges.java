@@ -1,58 +1,49 @@
-
-class Pair {
-    int row,col,tm;
-    
-    Pair(int _row,int _col, int _tm){
-        this.row=_row;
-        this.col=_col;
-        this.tm=_tm;
-    }
-}
-
 class Solution {
+    private boolean isvalid(int i, int j, int n, int m){
+        return i>=0 && j>=0 && i<n && j<m;
+    }
+    int[][] direction = {{0,1}, {1,0}, {0,-1}, {-1,0}};
+
+
     public int orangesRotting(int[][] grid) {
+        Queue<int[]> q = new LinkedList<>();
         int n=grid.length;
-        int m = grid[0].length;
-        
-        Queue<Pair> q = new LinkedList<>();
-        int[][] vis = new int[n][m];
-        int cntFresh=0;
+        int m=grid[0].length;
+        int freshFruits = 0;
+        boolean[][] vis = new boolean[n][m];
         for(int i=0;i<n;i++){
             for(int j=0;j<m;j++){
                 if(grid[i][j]==2){
-                    q.add(new Pair(i,j,0));
-                    vis[i][j]=2;
+                    q.add(new int[]{i,j,0});
+                    vis[i][j] =true;
                 }
                 if(grid[i][j]==1){
-                    cntFresh++;
+                    freshFruits++;
                 }
             }
         }
-        int tm=0;
-        int[] drow={-1,0,1,0};
-        int[] dcol={0,1,0,-1};
-        int cnt=0;
+        int time=0;
+
         while(!q.isEmpty()){
-            int r = q.peek().row;
-            int c = q.peek().col;
-            int t = q.peek().tm;
-            q.poll();
-            tm=Math.max(tm,t);
-            for(int i=0;i<4;i++){
-                int nrow=r+drow[i];
-                int ncol = c+dcol[i];
-                
-                if(nrow>=0 && nrow<n && ncol>=0 && ncol<m && vis[nrow][ncol]==0 && grid[nrow][ncol]==1){
-                    q.add(new Pair(nrow,ncol,t+1));
-                    vis[nrow][ncol]=2;
-                    cnt++;
+            int size=q.size();
+            while(size-- >0){
+                int[] curr =q.poll();
+                time = Math.max(time, curr[2]);
+                for(int[] dir: direction){
+                    int nI = curr[0]+dir[0];
+                    int nJ = curr[1]+dir[1];
+                    if(isvalid(nI, nJ, n,m) && !vis[nI][nJ]){
+                        if(grid[nI][nJ]==1){
+                            q.add(new int[]{nI,nJ, curr[2]+1});
+                            freshFruits--;
+                            grid[nI][nJ]=2;
+                            vis[nI][nJ]=true;
+                        }
+
+                    }
                 }
             }
-            
         }
-        if(cntFresh-cnt>0)return -1;
-        
-        return tm;
-        
+        return (freshFruits == 0)? time:-1;
     }
 }
