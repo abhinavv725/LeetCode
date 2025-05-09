@@ -1,19 +1,24 @@
 class Solution {
     public String applySubstitutions(List<List<String>> replacements, String text) {
-       boolean modify = true;
-       while(modify){
-            modify=false;
-            for(int i=0;i<replacements.size();i++){
-                List<String> curr = replacements.get(i);
-                String key = "%"+curr.get(0) +"%";
-                String value = curr.get(1);
-                if(text.contains(key)){
-                    text = text.replace(key, value);
-                    modify=true;
-                }
-            }
+        String ans="";
+        boolean check=true;
+        HashMap<String, String> map = new HashMap<>();
+        for(List<String> s: replacements){
+            map.put("%"+s.get(0)+"%", s.get(1));
 
-       }
-       return text;
+        }
+        while(check){
+            check=false;
+            for(String key: map.keySet()){
+                if(text.contains(key)){
+                    text=text.replace(key, map.get(key));
+                    check=true;
+
+                }
+
+            }
+        }
+
+        return text;
     }
 }
