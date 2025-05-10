@@ -1,26 +1,26 @@
 class Solution {
-    public int solve(int[] coins, int amount, int ind,int[][] dp){
-        if(amount==0)return 0;
-        if(amount<0 || ind<0)return Integer.MAX_VALUE;
-        if(dp[ind][amount]!=-1)return dp[ind][amount];
-         // Two choices: exclude or include the current coin
-        int exclude = solve(coins, amount, ind - 1,dp);
-        int include = solve(coins, amount - coins[ind], ind,dp);
-        
-        // If include is valid, add 1 to account for the coin used
-        if (include != Integer.MAX_VALUE) {
-            include += 1;
+    private int check(int i, int[] coins, int amount, int[][] dp){
+        if(amount==0)
+            return 0;
+        if(amount<0)
+            return Integer.MAX_VALUE;
+        if(dp[i][amount]!=-1)
+            return dp[i][amount];
+        int ans = Integer.MAX_VALUE;
+        for(int j=i;j<coins.length;j++){
+            int res = check(j, coins, amount-coins[j], dp);
+            if(res!=Integer.MAX_VALUE)
+                ans = Math.min(ans, 1+res);
         }
-        
-        // Return the minimum of the two options
-        return dp[ind][amount]=Math.min(exclude, include);
+        return dp[i][amount]= ans;
     }
     public int coinChange(int[] coins, int amount) {
-        int[][] dp = new int[coins.length+1][amount+1];
-        for(int[] r:dp)
-            Arrays.fill(r,-1);
-        int result = solve(coins, amount, coins.length - 1,dp);
+        int[][] dp = new int[coins.length][amount+1];
+        for(int[] d: dp){
+            Arrays.fill(d, -1);
+        }
+        int ans= check(0, coins, amount, dp);
         
-        return result == Integer.MAX_VALUE ? -1 : result;
+        return ans == Integer.MAX_VALUE ? -1: ans;
     }
 }
