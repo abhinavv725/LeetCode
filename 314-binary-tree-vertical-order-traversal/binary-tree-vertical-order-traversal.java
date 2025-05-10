@@ -1,71 +1,43 @@
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
- * }
- */
+
 class Solution {
-    private class Node {
-        TreeNode root;
+    private class Pair {
+        TreeNode node; 
         int step;
-        Node(TreeNode root, int step){
-            this.root=root;
-            this.step=step;
+        Pair(TreeNode node, int step){
+            this.node=node;
+            this.step = step;
         }
-    }
-    int mini = Integer.MAX_VALUE;
-    int maxi = Integer.MIN_VALUE;
-
-    private void bfs(TreeNode root, HashMap<Integer,List<Integer>> map){
-        Queue<Node> q = new LinkedList<>();
-        q.add(new Node(root, 0));
-
-        while(!q.isEmpty()){
-            int n=q.size();
-            while(n-- > 0){
-                Node curr = q.poll();
-                TreeNode currRoot = curr.root;
-                int step = curr.step;
-                mini = Math.min(step, mini);
-                maxi = Math.max(step, maxi);
-                if(!map.containsKey(step)){
-                    map.put(step, new ArrayList<>());
-                }
-                map.get(step).add(currRoot.val);
-
-                if(currRoot.left!=null){
-                    q.add(new Node(currRoot.left, step-1));
-                }
-                if(currRoot.right!=null){
-                    q.add(new Node(currRoot.right, step+1));
-                }
-            }
-        }
-
     }
     public List<List<Integer>> verticalOrder(TreeNode root) {
-        if(root == null)
-            return new ArrayList<>();
-        HashMap<Integer,List<Integer>> map = new HashMap<>();
-        bfs(root, map);
+        HashMap<Integer, List<Integer>> map = new HashMap<>();
         List<List<Integer>> ans = new ArrayList<>();
+        if(root==null)
+            return ans;
+        Queue<Pair> q = new LinkedList<>();
+        q.add(new Pair(root, 0));
+        int mini = Integer.MAX_VALUE;
+        int maxi = Integer.MIN_VALUE;
+        while(!q.isEmpty()){
+            int size = q.size();
+            while(size-- >0){
+                Pair p = q.poll();
+                TreeNode curr = p.node; int step = p.step;
+                mini =Math.min(mini, step);
+                maxi =Math.max(maxi, step);
+                map.computeIfAbsent(step, k-> new ArrayList<>()).add(curr.val);
+                if(curr.left!=null){
+                    q.add(new Pair(curr.left, step-1));
+                }
+                if(curr.right!=null){
+                    q.add(new Pair(curr.right, step+1));
+                }
+                
+
+            }
+        }
         for(int i=mini;i<=maxi;i++){
             ans.add(map.get(i));
         }
-        // int j=0;
-        // for(int i=mini;i<=maxi;i++){
-        //     ans.get(j).add(map.get(i));
-        //     j++;
-        // }
         return ans;
     }
 }
