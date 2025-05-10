@@ -27,20 +27,18 @@
  * }
  */
 class Solution {
-    private int dfs(List<NestedInteger> list, int step){
+    private int find(List<NestedInteger> nestedList, int depth){
         int sum=0;
-        for(NestedInteger n: list){
-            if(n.isInteger()){
-                sum+= n.getInteger() * step;
-            }else{
-                List<NestedInteger> temp = n.getList();
-                sum+= dfs(temp, step+1);
+        for(NestedInteger n : nestedList){
+            if(n.isInteger())
+                sum+=(n.getInteger()* depth);
+            else{
+                sum += find(n.getList(), depth+1);
             }
         }
         return sum;
-
     }
     public int depthSum(List<NestedInteger> nestedList) {
-        return dfs(nestedList, 1);
+        return find(nestedList, 1);
     }
 }
