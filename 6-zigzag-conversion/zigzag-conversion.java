@@ -1,42 +1,40 @@
 class Solution {
-    public String convert(String str, int numRows) {
-        if(str.length()<=numRows || numRows==1){
-            return str;
+    public String convert(String s, int numRows) {
+        if(numRows==1 || s.length()<=numRows)
+            return s;
+        char[][] matrix = new char[numRows][s.length()/2+2];
+        for(char[] m: matrix){
+            Arrays.fill(m, '*');
         }
-        StringBuilder sb = new StringBuilder();
-        char[][] image = new char[numRows][str.length()];
-
-        for(char[] c: image){
-            Arrays.fill(c, '*');
-        }
-        int i=0,j=0;
-        boolean goingDown=true;
-        for(int t=0;t<str.length();t++){
-            image[i][j] = str.charAt(t);
-            if(goingDown){
+        int i=0, j=0;
+        boolean down=true;
+        for(int t=0;t<s.length();t++){
+            char c = s.charAt(t);
+            matrix[i][j]=c;
+            if(down){
                 if(i==numRows-1){
-                    goingDown=false;
+                    down=false;
                     i--;
                     j++;
-
                 }else{
                     i++;
                 }
+
             }else{
                 if(i==0){
-                    goingDown=true;
+                    down=true;
                     i++;
                 }else{
-                    i--;
-                    j++;
+                    i--;j++;
                 }
+
             }
         }
+        StringBuilder sb = new StringBuilder();
         for( i=0;i<numRows;i++){
-            for( j=0;j<str.length();j++){
-                if(image[i][j]!='*'){
-                    sb.append(image[i][j]);
-                }
+            for( j=0;j<s.length()/2+2;j++){
+                if(matrix[i][j]!='*')
+                    sb.append(matrix[i][j]);
             }
         }
         return sb.toString();
