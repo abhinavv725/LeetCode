@@ -1,46 +1,43 @@
 class Solution {
-    private boolean isLowerLarger(double lineY, int[][] squares){
-        double areaUp = 0.0;
-        double areaDown = 0.0;
-        for(int[] s: squares){
-            int bottom = s[1];
-            int side = s[2];
-            int top = bottom + side;
-
-            if(top <= lineY){
-                areaDown += (double) side * side;
-            } else if(bottom >= lineY){
-                areaUp += (double) side * side;
-            } else {
-                double below =lineY - bottom;
-                double above = top - lineY;
-                areaDown += side * below;
-                areaUp += side * above;
+    private boolean isLowerlarge(double mid,int[][] squares){
+        double areaBelow=0.0, areaUp=0.0;
+        for(int[]s: squares){
+            if(s[1]>=mid){
+                areaUp+=(double) s[2]*s[2];
+            }else if(s[1]+s[2]<=mid){
+                areaBelow+= (double)s[2]*s[2];
+            }else{
+                int bottom = s[1];
+                int top = s[1]+s[2];
+                int side = s[2];
+                double above=top-mid;
+                double below = mid-bottom;
+                areaUp += side* above;
+                areaBelow+= side*below;
             }
+
         }
-        return areaDown >= areaUp;
+
+        return areaBelow>=areaUp;
+
     }
-
     public double separateSquares(int[][] squares) {
-        double low = Integer.MAX_VALUE;
         double high = Integer.MIN_VALUE;
-
-        for(int[] s : squares){
+        double low = Integer.MAX_VALUE;
+        for(int[]s:squares){
+            high = Math.max(high, s[1]+s[2]);
             low = Math.min(low, s[1]);
-            high = Math.max(high, s[1] + s[2]);
         }
-
-        double eps = 1e-5;
-
-        while(high - low > eps){
-            double mid = (low + high) / 2.0;
-            if(isLowerLarger(mid, squares)){
-                high = mid;
-            } else {
-                low = mid;
+        while(high-low > 1e-5){
+            double mid = (high+low)/2.0;
+            if(isLowerlarge(mid, squares)){
+                high=mid;
+            }else{
+                low=mid;
             }
-        }
 
-        return (low + high) / 2.0;
+        }
+        return high;
+
     }
 }
