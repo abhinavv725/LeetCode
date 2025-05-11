@@ -11,6 +11,7 @@ class Solution {
 
         while(!q.isEmpty()){
             int size = q.size();
+            s = sb.toString();
             while(size-- >0){
                 int i = q.poll();
                 char c = s.charAt(i);
@@ -35,7 +36,6 @@ class Solution {
                     }
                 }
             }
-            s=sb.toString();
         }
         return sb.toString();
     }
