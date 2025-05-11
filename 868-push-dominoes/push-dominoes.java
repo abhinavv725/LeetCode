@@ -1,44 +1,42 @@
 class Solution {
-    public String pushDominoes(String dominoes) {
+    public String pushDominoes(String s) {
         Queue<Integer> q = new LinkedList<>();
-        int n = dominoes.length();
-        for(int i=0;i<dominoes.length();i++){
-            if(dominoes.charAt(i)!='.')
+        int n = s.length();
+        for(int i=0;i<s.length();i++){
+            char c =s.charAt(i);
+            if(c!='.')
                 q.add(i);
         }
-        StringBuilder sb = new StringBuilder(dominoes);
+        StringBuilder sb = new StringBuilder(s);
 
         while(!q.isEmpty()){
             int size = q.size();
-            String temp = sb.toString();
-
             while(size-- >0){
-                int i=q.poll();
-                if(temp.charAt(i)=='L'){
-                    if(i-1>=0 && temp.charAt(i-1)=='.'){
-                        if(i-2>=0 && temp.charAt(i-2)=='R'){
+                int i = q.poll();
+                char c = s.charAt(i);
+                if(c=='L'){
+                    if(i-1>=0 && s.charAt(i-1)=='.'){
+                        if(i-2>=0 && s.charAt(i-2)=='R'){
                             continue;
                         }else{
-                            sb.setCharAt(i-1, 'L');
                             q.add(i-1);
+                            sb.setCharAt(i-1, 'L');
                         }
                     }
-
                 }else{
-                    if(i+1<n && temp.charAt(i+1)=='.'){
-                        if(i+2<n && temp.charAt(i+2)=='L'){
+                    if(i+1<n && s.charAt(i+1)=='.'){
+                        if(i+2<n && s.charAt(i+2)=='L'){
                             continue;
                         }else{
-                            sb.setCharAt(i+1, 'R');
                             q.add(i+1);
+                            sb.setCharAt(i+1, 'R');
+
                         }
                     }
-
                 }
             }
-
+            s=sb.toString();
         }
         return sb.toString();
-        
     }
 }
