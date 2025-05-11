@@ -39,12 +39,12 @@ class Node {
 */
 
 class Solution {
-    private Node build(int n, int r, int c,int[][] grid){
-        boolean allSame=true;
+    private Node build(int n, int r, int c, int[][] grid){
+        boolean allSame = true;
         for(int i=0;i<n;i++){
             for(int j=0;j<n;j++){
                 if(grid[r][c]!=grid[r+i][c+j]){
-                    allSame = false;
+                    allSame=false;
                     break;
                 }
             }
@@ -52,16 +52,14 @@ class Solution {
         if(allSame){
             return new Node(grid[r][c]==1, true);
         }
-        n=n/2;
-        Node tLeft = build(n, r,c,grid);
-        Node tRight = build(n, r,c+n,grid);
-        Node bLeft = build(n, r+n,c,grid);
-        Node bRight = build(n, r+n,c+n,grid);
-
+        n/=2;
+        Node tLeft = build(n, r, c, grid);
+        Node tRight = build(n, r, c+n, grid);
+        Node bLeft = build(n, r+n, c, grid);
+        Node bRight = build(n, r+n, c+n, grid);
         return new Node(false, false, tLeft, tRight, bLeft, bRight);
     }
     public Node construct(int[][] grid) {
         return build(grid.length, 0,0, grid);
-        
     }
 }
