@@ -8,54 +8,56 @@
  * }
  */
 class Solution {
-    private void dfs(TreeNode root, Map<TreeNode, List<TreeNode>> adj){
+    private void dfs(TreeNode root, Map<TreeNode,List<TreeNode>> adj){
         adj.computeIfAbsent(root, k-> new ArrayList<>());
         if(root.left!=null){
             adj.get(root).add(root.left);
-            adj.computeIfAbsent(root.left, k-> new ArrayList<>()).add(root);
+            adj.computeIfAbsent(root.left, k-> new ArrayList<>());
+            adj.get(root.left).add(root);
             dfs(root.left, adj);
-
         }
         if(root.right!=null){
             adj.get(root).add(root.right);
-            adj.computeIfAbsent(root.right, k-> new ArrayList<>()).add(root);
+            adj.computeIfAbsent(root.right, k-> new ArrayList<>());
+            adj.get(root.right).add(root);
             dfs(root.right, adj);
         }
     }
     public List<Integer> distanceK(TreeNode root, TreeNode target, int k) {
-        Map<TreeNode, List<TreeNode>> adj = new HashMap<>();
-        dfs(root, adj);
-        if(k==0){
-            return Arrays.asList(target.val);
-        }
         List<Integer> ans = new ArrayList<>();
+        if(k==0)
+            return new ArrayList<>(Arrays.asList(target.val));
+        Map<TreeNode,List<TreeNode>> adj = new HashMap<>();
+        dfs(root, adj);
+
         Queue<TreeNode> q = new LinkedList<>();
         q.add(target);
+        Set<TreeNode> vis = new HashSet<>();
         int step=0;
-        Set<TreeNode> visited = new HashSet<>();
-        visited.add(target);
+        vis.add(target);
         while(!q.isEmpty()){
             ans = new ArrayList<>();
-            int n = q.size();
             step++;
-            while(n!=0){
+            int size = q.size();
+            while(size-- >0){
                 TreeNode curr = q.poll();
                 for(TreeNode nei: adj.getOrDefault(curr, new ArrayList<>())){
-                    if(!visited.contains(nei)){
+                    if(!vis.contains(nei)){
                         ans.add(nei.val);
                         q.add(nei);
-                        visited.add(nei);
+                        vis.add(nei);
+
                     }
-                    
                 }
-                n--;
+
             }
-            if(step==k){
+            if(step==k)
                 return ans;
-            }
+
         }
         ans = new ArrayList<>();
         return ans;
+
 
     }
 }
