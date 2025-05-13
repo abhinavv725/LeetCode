@@ -14,30 +14,25 @@
  * }
  */
 class Solution {
-    int ans;
-    StringBuilder sb;
-    private void find(TreeNode root){
+    int ans=0;
+    private void dfs(TreeNode root, int currSum){
         if(root==null)
             return;
-        int len = sb.length();
-        sb.append(root.val);
-        if(root.left==null && root.right==null){
-            ans+= Integer.parseInt(sb.toString());
-        }else{
-            find(root.left);
-            find(root.right);
-
+        int newSum = 10*currSum + root.val;
+        if(root.right==null && root.left==null){
+            ans+=newSum;
+            return;
         }
-        sb.setLength(len);
+        
+        dfs(root.left, newSum);
+        dfs(root.right, newSum);
 
     }
     public int sumNumbers(TreeNode root) {
-        ans = 0;
-        sb= new StringBuilder();
-        if(root==null)
-            return 0;
-        find(root);
+        dfs(root, 0);
+
         return ans;
+
         
     }
 }
