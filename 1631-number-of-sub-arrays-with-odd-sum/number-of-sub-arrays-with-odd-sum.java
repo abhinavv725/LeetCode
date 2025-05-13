@@ -1,25 +1,20 @@
 class Solution {
-    
-    
+    int MOD = (int) 1e9+7;
     public int numOfSubarrays(int[] arr) {
-        int ans=0;
-        int MOD = (int) Math.pow(10,9)+7;
-
-        int n =arr.length;
-        int even=1, odd=0, sum=0;
-        for(int i=0;i<n;i++){
+        int sum=0,ans=0;
+        int[]pre = new int[arr.length];
+        pre[0] = arr[0];
+        int cO= 0, cE=1;
+        for(int i=0;i<arr.length;i++){
             sum+=arr[i];
             if(sum%2==0){
-                ans= (ans+odd)%MOD;
-                even++;
+                ans = (ans+cO)%MOD;
+                cE++;
             }else{
-                ans= (ans+even)%MOD;
-
-                odd++;
+                ans = (ans+cE)%MOD;
+                cO++;
             }
         }
-
-        return ans%MOD;
-
+        return ans;
     }
 }
