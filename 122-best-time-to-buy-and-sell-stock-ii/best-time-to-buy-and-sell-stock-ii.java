@@ -1,34 +1,33 @@
 class Solution {
-    private int check(int[] prices, int i, boolean buy){
-        if(i==prices.length)
-            return 0;
-        if(buy){
-            return Math.max(-prices[i] + check(prices, i+1, false),
-                 0+ check(prices, i+1, true));
-
-        }else{
-            return Math.max(prices[i]+ check(prices, i+1, true), 0+check(prices, i+1, false));
-        }
-    }
-    private int tab(int[] prices){
-        int n=prices.length;
-        int[][] dp= new int[n+1][2];
-        dp[n][0]=dp[n][1]=0;
-
-        for(int i=n-1;i>=0;i--){
-            for(int buy=0;buy<=1;buy++){
-                if(buy==1){
-                    dp[i][buy]= Math.max(-prices[i] + dp[i+1][0], 0+ dp[i+1][1]);
-
-                }else{
-                    dp[i][buy]= Math.max(prices[i]+ dp[i+1][1], 0+dp[i+1][0]);
-                }
+    private int dfs(int i, int[]prices, int buy, int[][] dp){
+        if(i==prices.length-1){
+            if(buy==0){
+                return dp[i][buy]= prices[i];
             }
+            return dp[i][buy]=0;
         }
-        return dp[0][1];
+        if(dp[i][buy]!=-1)  return dp[i][buy];
+        int ans=0;
+        if(buy==1){
+            ans+= Math.max(
+                    -prices[i] + dfs(i+1, prices, 0, dp),
+                    0          + dfs(i+1, prices, 1, dp)
+                );
+        }else{
+            ans += Math.max(
+                    prices[i] + dfs(i+1, prices, 1, dp),
+                    0         + dfs(i+1, prices, 0, dp)
+                );
+
+        }
+        return dp[i][buy]= ans;
 
     }
     public int maxProfit(int[] prices) {
-        return tab(prices);
+        int[][] dp = new int[prices.length][2];
+        for(int[] d1: dp){
+            Arrays.fill(d1, -1);
+        }
+        return dfs(0, prices, 1, dp);
     }
 }
