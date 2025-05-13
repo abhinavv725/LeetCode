@@ -1,22 +1,17 @@
 class Solution {
-    private void flip(int i, int[] nums){
-        for(int j=0;j<3;j++){
-            nums[i+j] = nums[i+j] ^ 1;
-        }
-    }
     public int minOperations(int[] nums) {
-        
-        int res=0;
-        for(int i=0;i<=nums.length-3;i++){
+        int count=0;
+        for(int i=0;i<nums.length-2;i++){
             if(nums[i]==0){
-                res++;
-                flip(i, nums);
+                nums[i]=1;
+                nums[i+1] = (nums[i+1]==0)?1:0;
+                nums[i+2] = (nums[i+2]==0)?1:0;
+                count++;
             }
         }
-        for(int i=0;i<nums.length;i++){
-            if(nums[i]==0)
-                return -1;
-        }
-        return res;
+        int n = nums.length;
+        if(nums[n-1]==1 && nums[n-2]==1)
+            return count;
+        return -1;
     }
 }
