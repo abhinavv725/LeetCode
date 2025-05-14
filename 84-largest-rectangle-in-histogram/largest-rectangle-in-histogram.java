@@ -1,17 +1,39 @@
 class Solution {
     public int largestRectangleArea(int[] heights) {
-        Stack<Integer> st = new Stack<>();
-        int n=heights.length, maxArea=0;
-        for(int i=0;i<=heights.length;i++){
-            int currHeight = i==n ? 0: heights[i];
-            while(!st.isEmpty() && currHeight < heights[st.peek()]){
-                int height = heights[st.pop()];
-                int width = st.isEmpty() ? i : i-st.peek()-1;
-                maxArea = Math.max(maxArea, height*width);
+        int n = heights.length;
+        int[] left = new int[n];   // Index of nearest smaller to the left
+        int[] right = new int[n];  // Index of nearest smaller to the right
 
+        Stack<Integer> stack = new Stack<>();
+
+        // Compute nearest smaller to left for each bar
+        for (int i = 0; i < n; i++) {
+            while (!stack.isEmpty() && heights[stack.peek()] >= heights[i]) {
+                stack.pop();
             }
-            st.push(i);
+            left[i] = stack.isEmpty() ? -1 : stack.peek();  // -1 means no smaller to left
+            stack.push(i);
         }
+
+        stack.clear();  // Reuse stack
+
+        // Compute nearest smaller to right for each bar
+        for (int i = n - 1; i >= 0; i--) {
+            while (!stack.isEmpty() && heights[stack.peek()] >= heights[i]) {
+                stack.pop();
+            }
+            right[i] = stack.isEmpty() ? n : stack.peek();  // n means no smaller to right
+            stack.push(i);
+        }
+
+        // Calculate max area using left and right bounds
+        int maxArea = 0;
+        for (int i = 0; i < n; i++) {
+            int width = right[i] - left[i] - 1;  // Width between nearest smaller elements
+            int area = heights[i] * width;
+            maxArea = Math.max(maxArea, area);
+        }
+
         return maxArea;
     }
 }
