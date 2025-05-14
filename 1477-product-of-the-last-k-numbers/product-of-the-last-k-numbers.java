@@ -1,22 +1,32 @@
 class ProductOfNumbers {
-    int[] mul;
-    int index;
+    List<Integer> arr;
+    int prod;
+
 
     public ProductOfNumbers() {
-        mul=new int[40001];
-        index=0;
+        arr = new ArrayList<>();
+        prod =1;
     }
     
     public void add(int num) {
-        mul[index++]=num;
+        if(num==0){
+            arr = new ArrayList<>();
+            prod =1;
+        }else{
+            prod*=num;
+            arr.add(prod);
+        }
+        
     }
     
     public int getProduct(int k) {
-        int prod=1;
-        for(int i=index-k;i<index;i++){
-            prod*=mul[i];
+        if(k>arr.size())
+            return 0;
+        else if(k==arr.size())
+            return prod;
+        else{
+            return (int) (arr.get(arr.size()-1)/arr.get(arr.size()-1-k));
         }
-        return prod;
     }
 }
 
