@@ -1,69 +1,42 @@
 class Solution {
-    private boolean checkCycle(int i, List<Integer>[] adj,
-                                boolean[] visited,boolean[] pathVisit){
-        if(visited[i]==true)
-            return false;
-        
-        if(pathVisit[i]==true){
-            return true;
-        }
-        
-        pathVisit[i]=true;
-
-        for(int x: adj[i]){
-            if(checkCycle(x, adj, visited, pathVisit)){
-                return true;
+    List<Integer> ans = new ArrayList<>();
+    private boolean dfs(int node,List<List<Integer>> adj, boolean[] vis, boolean[]temp ){
+        vis[node]=true;
+        temp[node]=true;
+        for(Integer nei: adj.get(node)){
+            if(temp[nei]==true){
+                return false;
+            }
+            if(!vis[nei]){
+                if(dfs(nei, adj, vis, temp)==false)
+                    return false;
             }
         }
-
-        visited[i]=true;
-        pathVisit[i]=false;
-        return false;
-
-    }
-    private void dfs(int i, List<Integer>[] adj,boolean[] visit,Stack<Integer> st){
-        visit[i]=true;
-        for(int x: adj[i]){
-            if(!visit[x])
-                dfs(x, adj, visit, st);
-        }
-        st.push(i);
-
+        
+        temp[node]=false;
+        ans.add(node);
+        return true;
     }
     public int[] findOrder(int numCourses, int[][] prerequisites) {
-        List<Integer>[] adj = new ArrayList[numCourses];
-
+        List<List<Integer>> adj = new ArrayList<>();
         for(int i=0;i<numCourses;i++){
-            adj[i]=new ArrayList<>();
+            adj.add(new ArrayList<>());
+        }   
+        for(int[] p:prerequisites ){
+            adj.get(p[0]).add(p[1]);
         }
 
-        for(int[] pre: prerequisites){
-            int course = pre[0];
-            int prereq = pre[1];
-
-            adj[prereq].add(course);
-        }
-        boolean[] visited = new boolean[numCourses];
-        boolean[] pathVisit = new boolean[numCourses];
-
+        int[] arr = new int[numCourses];
+        boolean[] vis = new boolean[numCourses];
         for(int i=0;i<numCourses;i++){
-            if(visited[i]==false){
-                if(checkCycle(i, adj,visited, pathVisit)==true)
+            if(!vis[i]){
+                if(dfs(i, adj, vis, new boolean[numCourses])==false)
                     return new int[] {};
             }
         }
-        Stack<Integer> st = new Stack<>();
-        visited = new boolean[numCourses];
-        for(int i=0;i<numCourses;i++){
-            if(!visited[i]){
-                dfs(i,adj, visited,st);
-            }
+        for(int i=0;i<ans.size();i++){
+            arr[i] = ans.get(i);
         }
-
-        int[] result = new int[numCourses];
-        for(int i=0;i<numCourses;i++){
-            result[i]=st.pop();
-        }
-        return result;
+        return arr;
     }
 }
