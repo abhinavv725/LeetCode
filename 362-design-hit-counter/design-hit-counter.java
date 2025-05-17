@@ -1,6 +1,5 @@
 class HitCounter {
     Queue<Integer> q;
- 
     public HitCounter() {
         q = new LinkedList<>();
     }
@@ -10,16 +9,10 @@ class HitCounter {
     }
     
     public int getHits(int timestamp) {
-        while(!q.isEmpty()){
-            if(timestamp-q.peek()>=300){
-                q.poll();
-            }else{
-                break;
-            }
+        while(!q.isEmpty() && timestamp-q.peek()>=300){
+            q.poll();
         }
-
         return q.size();
-        
     }
 }
 
