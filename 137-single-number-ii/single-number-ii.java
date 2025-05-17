@@ -1,14 +1,12 @@
 class Solution {
     public int singleNumber(int[] nums) {
         Arrays.sort(nums);
-        int idx=0;
-        while(idx<nums.length-1){
-            if(nums[idx]!=nums[idx+1]){
-                return nums[idx];
-            }
-            idx+=3;
+        int i=0;
+        while(i<nums.length-1){
+            if(nums[i]!=nums[i+1])
+                return nums[i];
+            i+=3;
         }
-
         return nums[nums.length-1];
     }
 }
