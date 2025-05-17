@@ -1,33 +1,23 @@
 class Solution {
-    private String helper(String s ){
-        if(s.length()==1){
-            return "1" + s.charAt(0);
-        }
+    private String buildRLE(String s){
         StringBuilder sb = new StringBuilder();
-        int count=1;
-        char check = s.charAt(0);
-        for(int i=1;i<s.length();i++){
-            char curr = s.charAt(i);
-            if(curr == check){
+        int i=0;
+        while(i<s.length()){
+            int count=1;
+            while(i+1<s.length() && s.charAt(i)==s.charAt(i+1)){
+                i++;
                 count++;
-            }else{
-                sb.append(count+"");
-                sb.append(check);
-                count=1;
-                check=curr;
             }
+            sb.append(count).append(s.charAt(i));
+            i++;
         }
-        sb.append(count+"");
-        sb.append(check);
         return sb.toString();
-        
     }
     public String countAndSay(int n) {
-        String start = "1";
-        for(int i=1;i<n;i++){
-            start = helper(start);
+        String s = "1";
+        while(--n >0){
+            s = buildRLE(s);
         }
-
-        return start;
+        return s;
     }
 }
