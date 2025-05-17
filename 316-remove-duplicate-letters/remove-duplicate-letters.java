@@ -9,13 +9,12 @@ class Solution {
         for(int i=0;i<s.length();i++){
             char c = s.charAt(i);
             if(!set.contains(c)){
-                while(st.size()!=0 && c<st.peek() && map.get(st.peek())>i){
+                while(!st.isEmpty() && c<st.peek() && map.get(st.peek())>i){
                     set.remove(st.pop());
                 }
-                set.add(c);
                 st.push(c);
+                set.add(c);
             }
-            
         }
         StringBuilder sb = new StringBuilder();
         while(!st.isEmpty()){
