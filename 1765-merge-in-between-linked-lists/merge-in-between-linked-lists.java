@@ -10,32 +10,36 @@
  */
 class Solution {
     public ListNode mergeInBetween(ListNode list1, int a, int b, ListNode list2) {
-        ListNode aNode = list1;
-        ListNode bNode = list1;
+        // Dummy node simplifies edge cases (e.g., a = 0)
+        ListNode dummy = new ListNode(0);
+        dummy.next = list1;
 
-        ListNode temp1 = list1;
+        ListNode prevA = dummy;
 
-        // Get aNode = node at position (a - 1)
-        // Get bNode = node at position (b)
-        for(int i=0; i <= b; i++){
-            if(i == (a-1)){
-                aNode = temp1;
-            }else if(i == b){
-                bNode = temp1.next;
-                temp1.next = null;
-            }
-            temp1 = temp1.next;
+        // Step 1: Move to the node just before index 'a'
+        for (int i = 0; i < a; i++) {
+            prevA = prevA.next;
         }
-        //Connect aNode to list2
-        aNode.next = list2;
 
-        //Go to end of list2 and connect to bNode
-        ListNode tail2 = list2;     
-        while(tail2.next != null){
+        // Step 2: Move to the node just after index 'b'
+        ListNode curr = prevA;
+        for (int i = 0; i <= b - a + 1; i++) {
+            curr = curr.next;
+        }
+
+        // Step 3: Connect node before 'a' to head of list2
+        prevA.next = list2;
+
+        // Step 4: Traverse list2 to its tail
+        ListNode tail2 = list2;
+        while (tail2.next != null) {
             tail2 = tail2.next;
         }
-        tail2.next = bNode;
 
-        return list1;
+        // Step 5: Connect tail of list2 to the node after 'b'
+        tail2.next = curr;
+
+        // Return the modified list1 (starting from dummy.next)
+        return dummy.next;
     }
 }
