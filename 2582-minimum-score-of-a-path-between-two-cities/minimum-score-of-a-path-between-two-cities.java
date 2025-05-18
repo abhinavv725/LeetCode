@@ -1,37 +1,32 @@
 class Solution {
-    private int ans = Integer.MAX_VALUE;
-    private class Pair {
-        int i; int j; int d;
-        Pair(int i, int j , int d){
-            this.i=i;this.j=j;this.d=d;
-        }
-    }
-    private void bfs(int node, List<List<Pair>> adj,boolean[] vis){
-        vis[node]=true;
-        for(Pair p: adj.get(node)){
-            ans = Math.min(ans, p.d);
-            if(vis[p.j]!=true){
-                bfs(p.j, adj, vis);
-            }
-            if(vis[p.i]!=true){
-                bfs(p.i, adj, vis);
-            }
-            
-        }
-    }
     public int minScore(int n, int[][] roads) {
-        List<List<Pair>> adj = new ArrayList<>();
+        List<List<int[]>> adj = new ArrayList<>();
         for(int i=0;i<=n;i++){
             adj.add(new ArrayList<>());
         }
-        boolean[] vis = new boolean[n+1];
-        for(int i=0;i<roads.length;i++){
-            Pair p = new Pair(roads[i][0], roads[i][1],roads[i][2]);
-            adj.get(roads[i][0]).add(p);
-            adj.get(roads[i][1]).add(p);
+        for(int[] road: roads){
+            adj.get(road[0]).add(new int[] {road[1], road[2]});
+            adj.get(road[1]).add(new int[] {road[0], road[2]});
         }
-        bfs(1, adj,vis);
-        return ans;
+        int min = Integer.MAX_VALUE;
+        Queue<int[]> q = new LinkedList<>();
+        q.add(new int[] {1, 0});
+        boolean[] vis = new boolean[n+1];
+        while(!q.isEmpty()){
+            int[] curr = q.poll();
+            int node = curr[0], weight = curr[1];
+            for(int[] nei: adj.get(node)){
+                int next = nei[0], edge = nei[1];
+                min = Math.min(min, edge);
 
+                if (!vis[next]) {
+                    vis[next]=true;
+                    q.add(new int[] {next, edge});
+                }
+            
+            }
+            
+        }
+        return min;
     }
 }
