@@ -1,58 +1,58 @@
-class Pair{
-    int i,j;
-    Pair(int _i,int _j){
-        this.i=_i;
-        this.j=_j;
-    }
-} 
 class Solution {
-    private void bfs(int i,int j,int[][] grid,boolean[][] vis){
+    private class Pair {
+        int i; int j;
+        Pair(int i, int j){
+            this.i=i;
+            this.j=j;
+        }
+    }
+    private void bfs(int i, int j, int n, int m, 
+                    int[][] grid, boolean[][] visit){
+        
+        int[] dx = {-1,0,1,0};
+        int[] dy = {0,1,0,-1};
         Queue<Pair> q = new LinkedList<>();
-        int n=grid.length;
-        int m=grid[0].length;
-        vis[i][j]=true;
         q.add(new Pair(i,j));
-        int[] drow={-1,0,1,0};
-        int[] dcol = {0,1,0,-1};
+        visit[i][j]=true;
         while(!q.isEmpty()){
-            int row = q.peek().i;
-            int col = q.peek().j;
-            q.remove();
-            
-            for(int t=0;t<4;t++){
-                int nrow=row+drow[t];
-                int ncol=col+dcol[t];
-                if(nrow>=0 && nrow<=n-1 && ncol>=0 && ncol<=m-1 && vis[nrow][ncol]==false && grid[nrow][ncol]==1){
-                    vis[nrow][ncol]=true;
-                    q.add(new Pair(nrow,ncol));
+            Pair p = q.poll();
+            for(int x=0;x<4;x++){
+                int nr = p.i+dx[x];
+                int nc = p.j+dy[x];
+
+                if(isValid(nr,nc, n,m) && grid[nr][nc]==1 && !visit[nr][nc]){
+                    q.add(new Pair(nr,nc));
+                    visit[nr][nc]=true;
                 }
             }
         }
-    
     }
+    private boolean isValid(int i, int j, int n, int m){
+        if(i>=0 && j>=0 && i<n && j<m)
+            return true;
+        return false;
+    }
+
     public int numEnclaves(int[][] grid) {
         int n=grid.length;
-        int m=grid[0].length;
-        
-        boolean[][] vis = new boolean[n][m];
+        int m = grid[0].length;
+        boolean[][] visit = new boolean[n][m];
         for(int i=0;i<n;i++){
             for(int j=0;j<m;j++){
-                if(i==0 || i==n-1 || j==0 || j==m-1){
-                    if(grid[i][j]==1)
-                        bfs(i,j,grid,vis);
+                if((i==0 || j==0 || i==n-1 || j==m-1) 
+                && !visit[i][j] && grid[i][j]==1){
+                    bfs(i,j,n,m,grid,visit);
                 }
             }
         }
-        
+
         int ans=0;
         for(int i=0;i<n;i++){
             for(int j=0;j<m;j++){
-                if(grid[i][j]==1 && vis[i][j]==false){
+                if(grid[i][j]==1 && !visit[i][j])
                     ans++;
-                }
             }
         }
         return ans;
-        
     }
 }
