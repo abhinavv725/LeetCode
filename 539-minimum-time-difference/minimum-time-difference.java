@@ -1,20 +1,22 @@
 class Solution {
-    private int min(String s){
-        String[] parts = s.split(":");
-
-        return Integer.parseInt(parts[0])*60 + Integer.parseInt(parts[1]);
-    }
     public int findMinDifference(List<String> timePoints) {
         List<Integer> arr = new ArrayList<>();
-        for(String s: timePoints){
-            arr.add(min(s));
+        for(String time: timePoints){
+            String[] a = time.split(":");
+            int seconds = Integer.parseInt(a[0])*60+Integer.parseInt(a[1]);
+            arr.add(seconds);
         }
         Collections.sort(arr);
-        int mini = 1440+ arr.get(0)-arr.get(arr.size()-1);
-
+        int min = Integer.MAX_VALUE;
         for(int i=1;i<arr.size();i++){
-            mini = Math.min(mini, Math.abs(arr.get(i)-arr.get(i-1)));
+            int a = arr.get(i);
+            int b = arr.get(i-1);
+            int diff = Math.abs(a-b);
+            min = Math.min(min, diff);
         }
-        return mini;
+        int last = arr.get(arr.size()-1);
+        int first = arr.get(0);
+        min=Math.min(min, 24*60 - last+first);
+        return min;
     }
 }
