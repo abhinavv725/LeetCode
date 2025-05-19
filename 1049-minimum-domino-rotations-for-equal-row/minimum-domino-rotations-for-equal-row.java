@@ -1,30 +1,29 @@
 class Solution {
     public int minDominoRotations(int[] tops, int[] bottoms) {
-        int n = tops.length;
+        int[] range = {tops[0], bottoms[0]};
         int ans=Integer.MAX_VALUE;
-
-        int[] range = new int[]{tops[0], bottoms[0]};
-
         for(int i=0;i<=1;i++){
-            int tempTop=0, tempBottom=0;
-            boolean failed = false;
+            int curr = range[i];
+            int tempUp =0, tempBot = 0;
+            boolean valid=true;
             for(int j=0;j<tops.length;j++){
-                if(tops[j]!=range[i] && bottoms[j]!=range[i]){
-                    failed =true;
+                if(tops[j]!=curr && bottoms[j]!=curr){
+                    valid=false;
                     break;
-                }
-                if(tops[j]==range[i] && bottoms[j]==range[i]){
+                }else if(tops[j]==curr && bottoms[j]==curr){
                     continue;
                 }
-                if(tops[j]==range[i])   tempTop++;
-                if(bottoms[j]==range[i])   tempBottom++;
-            }
-            if(!failed){
-                ans = Math.min(tempTop,tempBottom);
-            }
+                else if(curr==tops[j]){
+                    tempUp++;
+                }else{
+                    tempBot++;
+                }
 
+            }
+            if(valid){
+                ans = Math.min(ans, Math.min(tempUp, tempBot));
+            }
         }
-        
-        return (ans == Integer.MAX_VALUE) ? -1: ans;
+        return ans ==Integer.MAX_VALUE ? -1: ans;
     }
 }
