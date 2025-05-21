@@ -14,9 +14,9 @@ class Solution {
                 HashMap<Integer, Integer> temp = new HashMap<>();
 
                 for(int key: map.keySet()){
-                    int count = map.get(key) - 1;
-                    if (count > 0) {
-                        temp.put(key, count);
+                    map.put(key, map.get(key)-1);
+                    if(map.get(key)>0){
+                        temp.put(key, map.get(key));
                     }
                 }
                 map=temp;
