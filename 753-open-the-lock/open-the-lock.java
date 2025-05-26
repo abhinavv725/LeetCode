@@ -1,43 +1,49 @@
 class Solution {
-    private List<String> children(String lock){
-        List<String> result = new ArrayList<>();
-        for(int i=0;i<4;i++){
-            char[] arr  = lock.toCharArray();
-            arr[i] = (char) ((arr[i]-'0' + 1)%10 + '0');
-            result.add(new String(arr));
+    private List<String> getCombinations(String start){
+        List<String> states = new ArrayList<>();
+        for(int i=0;i<=3;i++){
+            char[] arr = start.toCharArray();
+            char original = arr[i];
+            arr[i] = original=='9' ? '0' : (char)(original+1);
+            states.add(new String(arr));
+            arr[i] = original=='0' ? '9' : (char)(original-1);
+            states.add(new String(arr));
 
-            arr=lock.toCharArray();
-            arr[i] = (char) ((arr[i]-'0' - 1 +10)%10 + '0');
-            result.add(new String(arr));
+
         }
+        return states;
 
-        return result;
-        
     }
     public int openLock(String[] deadends, String target) {
-        Set<String> visited = new HashSet<>(Arrays.asList(deadends));
-        if(visited.contains("0000"))
-            return -1;
-        
+        HashSet<String> dead = new HashSet<>();
+        for(String s: deadends){
+            dead.add(s);
+        }
+        String start ="0000";
+        if(start.equals(target))
+            return 0;
         Queue<String> q = new LinkedList<>();
-        q.add("0000");
-        visited.add("0000");
-        int turns=0;
+        if(dead.contains(start) || dead.contains(target))
+            return -1;
+        q.add(start);
+        Set<String> vis = new HashSet<>();
+        vis.add(start);
+        int steps=0;
         while(!q.isEmpty()){
             int size = q.size();
-            while(size-->0){
-                String lock = q.poll();
-                if(lock.equals(target))
-                    return turns;
-                
-                for(String next: children(lock)){
-                    if(!visited.contains(next)){
-                        visited.add(next);
-                        q.add(next);
-                    }
+            while(size-- >0){
+                String curr = q.poll();
+                for(String child: getCombinations(curr)){
+                    if(child.equals(target))
+                        return 1+steps;
+                    if(dead.contains(child) || vis.contains(child))
+                        continue;
+                    q.add(child);
+                    vis.add(child);
                 }
+
             }
-            turns++;
+            steps++;
         }
         return -1;
     }
