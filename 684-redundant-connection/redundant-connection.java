@@ -1,41 +1,42 @@
 class Solution {
-    
-    private int findParent(int n, int[] parent){
-        return parent[n]==n ? n : findParent(parent[n], parent);
+    int[] parent;
+    int[] rank;
+    private int find(int x){
+        if(parent[x]==-1){
+            return x;
+        }
+        return parent[x] = find(parent[x]);
+
     }
-    private boolean union(int x, int y, int[] rank, int[] parent){
-        int xSet = findParent(x, parent), ySet = findParent(y, parent);
-        if(xSet==ySet)
+    private boolean union(int a, int b){
+        int rootA = find(a);
+        int rootB = find(b);
+        if(rootA == rootB)
             return false;
         
-        if(rank[xSet]> rank[ySet])
-            parent[ySet] = xSet;
-        else{
-            parent[xSet] = ySet;
-            if(rank[xSet]==rank[ySet])
-                rank[xSet]++;
+        if(rank[rootA]>rank[rootB]){
+            parent[rootB] = rootA;
+            rank[rootA] += rank[rootB];
+        }else{
+            parent[rootA] = rootB;
+            rank[rootB] += rank[rootA];
+
         }
 
         return true;
-
     }
     public int[] findRedundantConnection(int[][] edges) {
         int n = edges.length;
-        int[] parent = new int[n+1];
-        int[] rank = new int[n+1];
-        for(int i=1;i<=n;i++){
-            parent[i]=i;
-        }
+        parent = new int[n+1];
+        rank = new int[n+1];
+        Arrays.fill(parent, -1);
+        Arrays.fill(rank, 1);
         for(int[] e: edges){
-            int u = e[0];
-            int v = e[1];
-            if(findParent(u, parent) == findParent(v, parent)){
+            int u = e[0], v=e[1];
+            if(!union(u, v)){
                 return e;
             }
-             union(u,v, rank, parent);
-
-
         }
-        return new int[] {};
+        return new int[] {0, 0};
     }
 }
