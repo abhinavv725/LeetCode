@@ -1,14 +1,15 @@
 class Solution {
-    
-    public int solve(int[] nums, int ind, int target, int curr){
-        if(ind<0 && target==curr)return 1;
-        if(ind<0 )return 0;
-        
-        return solve(nums, ind-1, target, curr+nums[ind]) + 
-            solve(nums, ind-1, target, curr-nums[ind]);
+    private int dfs(int i, int[] nums, int target){
+        if(i>=nums.length){
+            return target==0 ? 1:0;
+        }
+
+        int ans=0;
+        ans+=dfs(i+1, nums, target-nums[i]);
+        ans+=dfs(i+1, nums, target+nums[i]);
+        return ans;
     }
     public int findTargetSumWays(int[] nums, int target) {
-        return solve(nums, nums.length-1, target, 0);
-        
+        return dfs(0, nums, target);
     }
 }
