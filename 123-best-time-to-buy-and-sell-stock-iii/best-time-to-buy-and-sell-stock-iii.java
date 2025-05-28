@@ -1,40 +1,34 @@
 class Solution {
-    private int check(int[] prices, int i, int cap, int buy){
-        if(cap<0)
-            return -(int) Math.pow(10, 9);
-        if(i==prices.length)
+    private int dfs(int i, int[] prices, int buy, int k,int[][][] dp){
+        if(k<=0)
             return 0;
-        if(buy==1){
-            return Math.max(-prices[i]+check(prices, i+1, cap, 0),
-                            0 + check(prices, i+1, cap, 1));
-        }else{
-            return Math.max(prices[i] + check(prices, i+1, cap-1, 1),
-                            0 + check(prices, i+1, cap, 0));
-        }
-
-    }
-    private int tab(int[] prices){
-        int n=prices.length;
-        int[][][] dp = new int[n+1][2][3];
-        
-        for(int i=n-1;i>=0;i--){
-            for(int buy = 0;buy<=1;buy++){
-                for(int cap=1;cap<=2;cap++){
-                    if(buy==1){
-                        dp[i][buy][cap]= Math.max(-prices[i]+dp[i+1][0][cap],
-                                        0 + dp[i+1][1][cap]);
-                    }else{
-                        dp[i][buy][cap] = Math.max(prices[i] +dp[i+1][1][cap-1], 
-                                                0+ dp[i+1][0][cap]);
-                        
-                    }
-                }
+        if(i==prices.length){
+            if(buy==0){
+                return +prices[i-1];
             }
+            return 0;
         }
-        return dp[0][1][2];
+        if(dp[i][buy][k]!=-1)
+            return dp[i][buy][k];
+        int ans=0;
+        if(buy==1){
+            ans = Math.max(-prices[i] + dfs(i+1, prices, 0, k, dp), 
+                            0 + dfs(i+1, prices, 1, k, dp));
+
+        }else{
+            ans = Math.max(+prices[i] + dfs(i+1, prices, 1, k-1, dp), 
+                            0 + dfs(i+1, prices, 0, k, dp));
+        }
+        return dp[i][buy][k] = ans;
 
     }
     public int maxProfit(int[] prices) {
-        return tab(prices);
+        int[][][] dp = new int[prices.length][2][3];
+        for(int[][] row1: dp){
+            for(int[] row2: row1){
+                Arrays.fill(row2, -1);
+            }
+        }
+        return dfs(0, prices, 1, 2, dp);
     }
 }
