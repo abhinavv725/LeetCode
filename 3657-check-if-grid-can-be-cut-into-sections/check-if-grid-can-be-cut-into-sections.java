@@ -1,19 +1,26 @@
 class Solution {
-    private boolean validate(int[][] rectangles, int d){
-        int gap=0;
-        Arrays.sort(rectangles, (a,b) -> Integer.compare(a[d], b[d]));
-        int farthest = rectangles[0][2+d];
-        for(int i=1;i<rectangles.length;i++){
-            int start = rectangles[i][d];
-            int end = rectangles[i][2+d];
-            if(farthest <= start){
-                gap++;
-            }
-            farthest = Math.max(farthest, end);
+    public boolean disect(int[][] rect, int d){
+        int[][] intervals = new int[rect.length][2];
+
+        for(int i=0;i<rect.length;i++){
+            intervals[i][0]=rect[i][d];
+            intervals[i][1]=rect[i][d+2];
         }
-        return gap>=2;
+        Arrays.sort(intervals, (a, b)-> Integer.compare(a[0], b[0]));
+        int farthest = intervals[0][1];
+        int i=1, gaps=0;
+        while(i<intervals.length){
+            int start = intervals[i][0];
+            int end = intervals[i][1];
+            if(farthest <= start){
+                gaps++;
+            }
+            farthest=Math.max(farthest, end);
+            i++;
+        }
+        return gaps>=2;
     }
     public boolean checkValidCuts(int n, int[][] rectangles) {
-        return validate(rectangles, 0) || validate(rectangles , 1);
+        return disect(rectangles, 0) || disect(rectangles, 1);
     }
 }
