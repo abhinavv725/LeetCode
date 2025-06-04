@@ -1,23 +1,21 @@
 class Solution {
     public long countGood(int[] nums, int k) {
-        Map<Integer, Integer> freq  = new HashMap<>();
-        int left=0, right=0;
-        long pairs = 0;
-        long res = 0;
-        int n=nums.length;
-        
-        while(right<n){
-            pairs += freq.getOrDefault(nums[right], 0);
-            freq.put(nums[right],freq.getOrDefault(nums[right], 0)+1);
-
-            while(pairs>=k){
-                res+=(n-right);
-                freq.put(nums[left], freq.get(nums[left])-1);
-                pairs -= freq.get(nums[left]);
-                left++;
+        long ans=0, total=0;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int l=0;
+        for(int r=0;r<nums.length;r++){
+            int curr = map.getOrDefault(nums[r], 0);
+            total+=curr;
+            map.put(nums[r], curr+1);
+            while(total>=k){
+                ans+=nums.length-r;
+                int left = map.get(nums[l]);
+                total-=left-1;
+                map.put(nums[l], left-1);
+                l++;
             }
-            right++;
         }
-        return res;
+
+        return ans;
     }
 }
