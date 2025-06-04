@@ -1,67 +1,73 @@
-class Solution {
+class DSU {
     int[] parent;
     int[] rank;
-    boolean[][] vis;
-    private int find(int x){
-        if(parent[x]==-1){
-            return x;
+    DSU(int n){
+        rank = new int[n];
+        Arrays.fill(rank, 1);
+        parent = new int[n];
+        for(int i=0;i<n;i++){
+            parent[i]=i;
         }
-        return parent[x]=find(parent[x]);
     }
-    private boolean union(int a, int b){
+    public boolean union(int a, int b){
+        if(isConnected(a, b))
+            return false;
         int rootA = find(a);
         int rootB = find(b);
-        if(rootA==rootB)
-            return false;
-        else if(rank[rootA]> rank[rootB]){
+        if(rank[rootA]> rank[rootB]){
             parent[rootB] = rootA;
             rank[rootA]+=rank[rootB];
         }else{
             parent[rootA] = rootB;
-            rank[rootB]=rank[rootA];
+            rank[rootB]+=rank[rootA]; 
         }
-        
         return true;
-
     }
-    private boolean isValid(int i, int j, int n, int m){
-        return i>=0 && j>=0 && i<n && j<m;
+    public int find(int a){
+        if(parent[a]==a)
+            return a;
+        return parent[a]=find(parent[a]);
+    }
+    public boolean isConnected(int a, int b){
+        return find(a) == find(b);
+    }
+}
 
+class Solution {
+    public boolean isValid(int i, int j, int n, int m){
+        return i>=0 && j>=0 && i<n && j<m;
     }
     public List<Integer> numIslands2(int n, int m, int[][] positions) {
-        parent = new int[n*m];
-        Arrays.fill(parent, -1);
-        rank = new int[n*m];
-        vis = new boolean[n][m];
-        Arrays.fill(rank, 1);
-        int cnt=0;
+        int[][] mat = new int[n][m];
         List<Integer> ans = new ArrayList<>();
-        int[][] directions = {{0,1}, {1,0},{0,-1},{-1,0}};
-        for(int[] pos : positions){
-            int i =pos[0];
-            int j= pos[1];
-            int index = i*m+j;
-            if(vis[i][j]){
+        int cnt=0;
+        DSU dsu = new DSU(n*m);
+        int[][] directions = {{1, 0}, {0,1}, {-1, 0}, {0,-1}};
+        for(int[] pos: positions){
+        
+            int i=pos[0], j=pos[1];
+            if(mat[i][j]==1){
                 ans.add(cnt);
                 continue;
             }
+            mat[i][j]=1;
             cnt++;
-            vis[i][j]=true;
+
+
+            int a = i*m+j;
             for(int[] dir: directions){
-                int adjI = i+dir[0];
-                int adjJ = j+dir[1];
-                if(isValid(adjI, adjJ, n,m) && vis[adjI][adjJ]){
-                    int neighbourIdx = adjI*m+adjJ;
-                    if(union(index, neighbourIdx)){
+                int ni = i+dir[0], nj = j+dir[1];
+                if(isValid(ni, nj, n,m) && mat[ni][nj]==1){
+                    int b = ni*m+nj;
+                    if( dsu.union(a, b)){
                         cnt--;
                     }
                 }
             }
+
             ans.add(cnt);
-
-
         }
-        return ans;
 
+        return ans;
     }
 }
