@@ -1,9 +1,9 @@
 class Solution {
+    List<List<String>> ans = new ArrayList<>();
+    char[][] board;
     HashSet<Integer> col = new HashSet<>();
     HashSet<Integer> posDiagonal = new HashSet<>();
     HashSet<Integer> negDiagonal = new HashSet<>();
-    List<List<String>>  ans = new ArrayList<>();
-    char[][] board;
     private void dfs(int r, int n){
         if(r==n){
             List<String> temp = new ArrayList<>();
@@ -12,24 +12,19 @@ class Solution {
             }
             ans.add(temp);
             
-            return;
-        }else{
-            for(int c=0;c<n;c++){
-                int posDia = r+c;
-                int negDia = r-c;
-                if(col.contains(c) || posDiagonal.contains(posDia) || negDiagonal.contains(negDia))
-                    continue;
-                col.add(c);
-                posDiagonal.add(posDia);
-                negDiagonal.add(negDia);
-                board[r][c] = 'Q';
-                dfs(r+1, n);
-                col.remove(c);
-                posDiagonal.remove(posDia);
-                negDiagonal.remove(negDia);
-                board[r][c] = '.';
-
+        }
+        for(int c=0;c<n;c++){
+            int pos =r+c;
+            int neg = r-c;
+            if(col.contains(c) || posDiagonal.contains(pos) || negDiagonal.contains(neg)){
+                continue;
             }
+            col.add(c); posDiagonal.add(pos); negDiagonal.add(neg);
+            board[r][c] = 'Q';
+            dfs(r+1, n);
+            board[r][c]='.';
+            col.remove(c); posDiagonal.remove(pos); negDiagonal.remove(neg);
+
         }
     }
     public List<List<String>> solveNQueens(int n) {
@@ -39,6 +34,5 @@ class Solution {
         }
         dfs(0, n);
         return ans;
-        
     }
 }
