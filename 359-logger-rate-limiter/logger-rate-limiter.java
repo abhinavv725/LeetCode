@@ -1,26 +1,22 @@
-import java.util.HashMap;
-import java.util.Map;
 
-public class Logger {
-
-    private final Map<String, Integer> messageTimestamps;
+class Logger {
+    HashMap<String, Integer> map;
 
     public Logger() {
-        messageTimestamps = new HashMap<>();
+        map = new HashMap<>();
     }
-
+    
     public boolean shouldPrintMessage(int timestamp, String message) {
-        if (!messageTimestamps.containsKey(message)) {
-            messageTimestamps.put(message, timestamp);
+        if(!map.containsKey(message)){
+            map.put(message, timestamp);
+            return true;
+        }else{
+            int time = map.get(message);
+            if(timestamp - time < 10){
+                return false;
+            }
+            map.put(message, timestamp);
             return true;
         }
-
-        int lastPrinted = messageTimestamps.get(message);
-        if (timestamp - lastPrinted >= 10) {
-            messageTimestamps.put(message, timestamp);
-            return true;
-        }
-
-        return false;
     }
 }
