@@ -1,15 +1,15 @@
 
 class Solution {
-    private ListNode mergerNodes(ListNode a, ListNode b){
+    private ListNode merge(ListNode a, ListNode b){
         ListNode dummy = new ListNode(-1);
-        ListNode curr = dummy;
+        ListNode curr= dummy;
         while(a!=null && b!=null){
-            if(a.val> b.val){
+            if(b.val>a.val){
+                curr.next=a;
+                a=a.next;
+            }else{
                 curr.next = b;
                 b=b.next;
-            }else{
-                curr.next = a;
-                a=a.next;
             }
             curr=curr.next;
         }
@@ -19,24 +19,24 @@ class Solution {
         if(b!=null){
             curr.next=b;
         }
-
         return dummy.next;
+
     }
     private ListNode mergeSort(ListNode head){
-        if(head == null || head.next==null)
-            return head;
-        ListNode slow=head, fast=head.next;
+        if(head==null || head.next==null)  return head;
+        ListNode slow =head, fast = head.next;
         while(fast!=null && fast.next!=null){
             slow=slow.next;
-            fast=fast.next.next;
+            fast = fast.next.next;
         }
-        ListNode left=head;
+        ListNode left = head;
         ListNode right = slow.next;
         slow.next=null;
 
         left = mergeSort(left);
-        right = mergeSort(right);
-        return mergerNodes(left, right);
+        right=mergeSort(right);
+
+        return merge(left, right);
     }
     public ListNode sortList(ListNode head) {
         return mergeSort(head);
