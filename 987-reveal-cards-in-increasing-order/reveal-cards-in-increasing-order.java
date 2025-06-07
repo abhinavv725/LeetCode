@@ -1,18 +1,18 @@
 class Solution {
     public int[] deckRevealedIncreasing(int[] deck) {
-        Arrays.sort(deck);
         Queue<Integer> q = new LinkedList<>();
-        for(int i=0;i<deck.length;i++){
+        int n = deck.length;
+        for(int i=0;i<n;i++){
             q.add(i);
         }
-        int[] ans = new int[deck.length];
-        int i=0;
-        while(!q.isEmpty()){
-            int first = q.poll();
-            ans[first] = deck[i++];
+        Arrays.sort(deck);
+        int[] ans = new int[n];
+        for(int i=0;i<n;i++){
+            int num = q.poll();
+            ans[num] = deck[i];
             if(!q.isEmpty()){
                 q.add(q.poll());
-            }
+            } 
         }
         return ans;
     }
