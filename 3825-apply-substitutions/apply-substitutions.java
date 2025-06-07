@@ -1,42 +1,30 @@
 class Solution {
-    // Map to store variable replacements
-    HashMap<String, String> map;
+    HashMap<Character, String> map = new HashMap<>();
+    public String dfs(String text, StringBuilder sb){
+        if(text.equals("")) 
+            return "";
+        char[] arr = text.toCharArray();
+        int i=0;
+        while(i<arr.length){
+            char c = arr[i];
+            if(c=='%'){
+                char k = arr[i+1];
+                i+=2;
+                String replace = map.get(k);
 
-    public String applySubstitutions(List<List<String>> replacements, String text) {
-        map = new HashMap<>();
-
-        // Build the map from the list of replacements
-        for (List<String> r : replacements) {
-            map.put(r.get(0), r.get(1));
-        }
-
-        // Recursively resolve the input text
-        return dfs(text);
-    }
-
-    // Recursively resolves a string by replacing all %x% placeholders
-    private String dfs(String s) {
-        StringBuilder sb = new StringBuilder();
-        int i = 0, n = s.length();
-
-        while (i < n) {
-            if (s.charAt(i) != '%') {
-                // Regular character, just append
-                sb.append(s.charAt(i));
-                i++;
-            } else {
-                // Found a placeholder: format is always %x%
-                int j = i + 2; // j points to the second '%'
-                String key = String.valueOf(s.charAt(i + 1)); // extract single-char key
-                String replacement = map.get(key); // get mapped value
-
-                // Recursively resolve this replacement in case it has placeholders
-                sb.append(dfs(replacement));
-
-                i = j + 1; // move past the closing '%'
+                sb.append(dfs(replace, new StringBuilder()));
+            }else{
+                sb.append(c);
             }
+            i++;
+        }
+        return sb.toString();
+    }
+    public String applySubstitutions(List<List<String>> replacements, String text) {
+        for(List<String> s: replacements){
+            map.put(s.get(0).charAt(0), s.get(1));
         }
 
-        return sb.toString();
+        return dfs(text, new StringBuilder());
     }
 }
