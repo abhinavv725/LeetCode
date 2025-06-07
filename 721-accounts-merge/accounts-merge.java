@@ -1,56 +1,83 @@
-class Solution {
+class DSU {
     int[] parent;
     int[] rank;
-    private int find(int x){
-        if(parent[x]==-1)   return x;
-        return parent[x]=find(parent[x]);
+    DSU(int n){
+        parent = new int[n]; 
+        rank = new int[n]; 
+        for(int i=0;i<n;i++){
+            parent[i]=i;
+            rank[i]=1;
+        }
     }
-    private boolean union(int a, int b){
+    public boolean union(int a, int b){
         int rootA = find(a);
         int rootB = find(b);
-        if(rootA==rootB)    return false;
+        if(rootA==rootB){
+            return false;
+        }
         else if(rootA>rootB){
             parent[rootB] = rootA;
-            rank[rootA]+=rank[rootB];
+            rank[rootA] += rank[rootB];
         }else{
             parent[rootA] = rootB;
-            rank[rootB]+=rank[rootA];
-
+            rank[rootB] += rank[rootA];
         }
         return true;
     }
-
+    public int find(int a){
+        if(parent[a]==a){
+            return a;
+        }
+        return parent[a] = find(parent[a]);
+    }
+}
+class Solution {
     public List<List<String>> accountsMerge(List<List<String>> accounts) {
-        int n=accounts.size();
-        parent=new int[n];
-        rank=new int[n];
-        Arrays.fill(parent, -1);
-        Arrays.fill(rank, 1);
+        int n = accounts.size();
+        DSU dsu = new DSU(n);
+
         HashMap<String, Integer> emailToId = new HashMap<>();
         for(int i=0;i<n;i++){
-            List<String> emails = accounts.get(i);
-            for(int j=1;j<emails.size();j++){
-                String e = emails.get(j);
-                if(emailToId.containsKey(e)){
-                    union(i, emailToId.get(e));
+            for(int j=1;j<accounts.get(i).size();j++){
+                String email = accounts.get(i).get(j);
+                if(emailToId.containsKey(email)){
+                    dsu.union(i, emailToId.get(email));
                 }else{
-                    emailToId.put(e, i);
+                    emailToId.put(email, i);
                 }
             }
         }
-        HashMap<Integer, List<String>> idToEmail = new HashMap<>();
-        for(String email:emailToId.keySet() ){
-            int rootId = find(emailToId.get(email));
-            idToEmail.computeIfAbsent(rootId, k-> new ArrayList<>()).add(email);
+        HashMap<Integer, Set<String>> map = new HashMap<>();
+        for(int i=0;i<n;i++){
+            List<String> acc = accounts.get(i);
+            int root = dsu.find(i);
+            if(!map.containsKey(root)){
+                map.put(root, new HashSet<>());
+            }
+            for(int j=1;j<acc.size();j++){
+                map.get(root).add(acc.get(j));
+            }
+            
         }
         List<List<String>> ans = new ArrayList<>();
-        for(int id: idToEmail.keySet()){
-            List<String> emails = idToEmail.get(id);
-            Collections.sort(emails);
-            emails.add(0, accounts.get(id).get(0));
-            ans.add(emails);
+        for(int root: map.keySet()){
+            List<String> acc = new ArrayList<>(map.get(root));
+            Collections.sort(acc);
+            acc.add(0, accounts.get(root).get(0));
+            ans.add(acc);
         }
         return ans;
-
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
