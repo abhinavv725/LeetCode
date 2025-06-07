@@ -1,26 +1,26 @@
 class Solution {
-    private boolean checkIfCollide(int[] a, int[] b, int target){
-        double a_time = (double)(target-a[0])/a[1];
-        double b_time =  (double)(target-b[0])/b[1];
-        return b_time<=a_time;
+    private boolean willMeet(int a, int b, int[][] arr, int target){
+        double tl = (double)(target-arr[b][0])/arr[b][1];
+        double tf = (double)(target-arr[a][0])/arr[a][1];
+
+        return tf<=tl;
     }
     public int carFleet(int target, int[] position, int[] speed) {
-        int[][] pos = new int[position.length][2];
-        for(int i=0;i<position.length;i++){
-            pos[i][0]=position[i];
-            pos[i][1] = speed[i];
+        int fleet=1, n = position.length;
+        int[][] arr= new int[n][2];
+        for(int i=0;i<n;i++){
+            arr[i][0]=position[i];
+            arr[i][1]=speed[i];
         }
-        Arrays.sort(pos, (a,b) -> Integer.compare(a[0], b[0]));
-        int n = position.length;
-        int fleet=1;
-        int[] lead = pos[n-1];
+        Arrays.sort(arr, (a,b)->Integer.compare(a[0], b[0]));
+        int lastCar = n-1;
         for(int i=n-2;i>=0;i--){
-            int[] car = pos[i];
-            if(!checkIfCollide(lead, car, target)){
+            if(!willMeet(i,lastCar, arr, target)){
                 fleet++;
-                lead = car;
+                lastCar = i;
             }
         }
+
         return fleet;
     }
 }
