@@ -1,50 +1,47 @@
+
 class Solution {
-    public ListNode swapPairs(ListNode head) {
-        return reverseKGroup(head, 2);
-    }
-
-    public ListNode reverseKGroup(ListNode head, int k) {
-        if (!hasKNodes(head, k)) {
-            return head; // Fewer than k nodes, return as-is
+    private boolean checkIfNodesExist(ListNode head, int k){
+        for(int i=0;i<k;i++){
+            if(head==null){
+                return false;
+            }
+            head=head.next;
         }
-
-        // Step 1: Save the (k+1)th node to reconnect after reversal
-        ListNode nextGroupStart = getKthNode(head, k);
-
-        // Step 2: Reverse first k nodes
-        ListNode newHead = reverseFirstK(head, k);
-
-        // Step 3: head is now the end of reversed group
-        head.next = reverseKGroup(nextGroupStart, k);
-
-        return newHead;
+        return true;
     }
-
-    private boolean hasKNodes(ListNode node, int k) {
-        int count = 0;
-        while (node != null && count < k) {
-            node = node.next;
-            count++;
+    private ListNode getTheKthNode(ListNode head, int k){
+        for(int i=1;i<k;i++){
+            head=head.next;
         }
-        return count == k;
+        return head;
     }
-
-    private ListNode reverseFirstK(ListNode head, int k) {
+    private ListNode reverse(ListNode head){
         ListNode prev = null;
         ListNode curr = head;
-        for (int i = 0; i < k; i++) {
-            ListNode next = curr.next;
-            curr.next = prev;
-            prev = curr;
-            curr = next;
+        while(curr!=null){
+            ListNode temp = curr.next;
+            curr.next=prev;
+            prev= curr;
+            curr=temp;
         }
-        return prev; // New head after reversal
-    }
 
-    private ListNode getKthNode(ListNode node, int k) {
-        for (int i = 0; i < k && node != null; i++) {
-            node = node.next;
+        return prev;
+    }
+    private ListNode reverseKgroups(ListNode head, int k){
+        if(!checkIfNodesExist(head, k)){
+            return head;
         }
-        return node;
+        ListNode kthNode = getTheKthNode(head, k);
+        ListNode nextGroup = kthNode.next;
+        kthNode.next = null;
+        ListNode newHead = reverse( head);
+        head.next=reverseKgroups(nextGroup, k);
+        return newHead;
+
+
+
+    }
+    public ListNode swapPairs(ListNode head) {
+        return reverseKgroups(head, 2);
     }
 }
