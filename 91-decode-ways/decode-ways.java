@@ -1,36 +1,26 @@
 class Solution {
-    public int solve(int i, int n, String s){
-        if(i==n){
+    int[] dp;
+    private int dfs(int i, String s){
+        if(i==s.length()){
             return 1;
         }
-        if(s.charAt(i)=='0'){
-            return 0;
-        }
-        int result = solve(i+1, n, s);
-        if(i+1<n && (s.charAt(i)=='1' || (s.charAt(i)=='2' && s.charAt(i+1)<='6'))){
-            result += solve(i+2, n, s);
+        if(s.charAt(i)=='0')  return 0;
+        if(dp[i]!=-1){
+            return dp[i];
         }
 
-        return result;
-        
+        int ans = dfs(i+1, s);
+        if(i+1<s.length()){
+            int num = Integer.parseInt(s.substring(i, i+2));
+            if(num>=10 && num<=26){
+                ans+=dfs(i+2, s);
+            }
+        }
+        return dp[i]= ans;
     }
     public int numDecodings(String s) {
-        int n=s.length();
-        int[] dp = new int[n+1];
-        dp[n] = 1;
-        for(int i=n-1;i>=0;i--){
-            if(s.charAt(i)=='0'){
-                dp[i]= 0;
-            }else{
-                dp[i] = dp[i+1];
-                if(i+1<n && (s.charAt(i)=='1' || (s.charAt(i)=='2' && s.charAt(i+1)<='6'))){
-                    dp[i] += dp[i+2];
-                }
-            }
-            
-
-        }
-        return dp[0];
-        
+        dp=new int[s.length()+1];
+        Arrays.fill(dp, -1);
+        return dfs(0, s);
     }
 }
