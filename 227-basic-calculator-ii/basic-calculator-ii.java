@@ -1,37 +1,31 @@
 class Solution {
     public int calculate(String s) {
         Stack<Integer> st = new Stack<>();
-        int result=0, num=0;
-        char lastOperator='+';
-        for(int i=0;i<s.length();i++){
-            char ch = s.charAt(i);
-            if(Character.isDigit(ch)){
-                num=10*num+(ch-'0');
+        int num=0;
+        char sign = '+';
+        s=s+"+";
+        for(char c: s.toCharArray()){
+            if(c==' ')  continue;
+            if(Character.isDigit(c)){
+                num =10*num+(c-'0');
+                continue;
             }
-            if(!Character.isDigit(ch) && ch !=' ' || i==s.length()-1 ){
-                if(lastOperator == '+'){
-                    st.push(num);
-                }
-                else if(lastOperator == '-'){
-                    st.push(-num);
-                }
-                else if(lastOperator == '*'){
-                    st.push(st.pop()*num);
-                }
-                else{
-                    st.push(st.pop()/num);
-                }
-                lastOperator = ch;
-                num=0;
-
+            if(sign=='-'){
+                st.add(-1*num);
+            }else if(sign=='+'){
+                st.add(num);
+            }else if(sign=='*'){
+                st.add(st.pop() * num);
+            }else{
+                st.add(st.pop() / num);
             }
-
-            
+            num=0;
+            sign = c;
         }
+        int ans=0;
         while(!st.isEmpty()){
-            result += st.pop();
+            ans+=st.pop();
         }
-
-        return result;
+        return ans;
     }
 }
