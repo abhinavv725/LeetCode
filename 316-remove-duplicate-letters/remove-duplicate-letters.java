@@ -5,21 +5,20 @@ class Solution {
             map.put(s.charAt(i), i);
         }
         Stack<Character> st = new Stack<>();
-        Set<Character> set = new HashSet<>();
+        HashSet<Character> set = new HashSet<>();
         for(int i=0;i<s.length();i++){
             char c = s.charAt(i);
-            if(!set.contains(c)){
-                while(!st.isEmpty() && c<st.peek() && map.get(st.peek())>i){
-                    set.remove(st.pop());
-                }
-                st.push(c);
-                set.add(c);
+            if(set.contains(c)) continue;
+            while(!st.isEmpty() && st.peek() > c && map.get(st.peek()) > i){
+                set.remove(st.pop());
             }
-        }
+            st.push(c);
+            set.add(c);
+        } 
         StringBuilder sb = new StringBuilder();
-        while(!st.isEmpty()){
-            sb.append(st.pop());
+        for(char c: st){
+            sb.append(c);
         }
-        return sb.reverse().toString();
+        return sb.toString();
     }
 }
