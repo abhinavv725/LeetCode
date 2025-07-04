@@ -1,26 +1,30 @@
 class Solution {
     public int[] exclusiveTime(int n, List<String> logs) {
-        int[] ans = new int[n];
-        int lastEnd=0;
-        Stack<Integer> st = new Stack<>();
-        for(String log: logs){
-            String[] p = log.split(":");
-            int idx = Integer.parseInt(p[0]);
-            int end = Integer.parseInt(p[2]);
-            String func = p[1];
-            if(func.equals("start")){
-                if(!st.isEmpty()){
-                    ans[st.peek()] += end-lastEnd;
-                }
-                st.push(idx);
-                lastEnd = end;
-            }else{
-                ans[st.pop()] +=  end-lastEnd+1;
-                lastEnd = end+1;
+        int[] result = new int[n];
+        Stack<Integer> stack = new Stack<>();
+        int prevTime = 0;
 
+        for (String log : logs) {
+            String[] parts = log.split(":");
+            int functionId = Integer.parseInt(parts[0]);
+            String type = parts[1];
+            int time = Integer.parseInt(parts[2]);
+
+            if (!stack.isEmpty()) {
+                // Add time to the function on top of the stack
+                result[stack.peek()] += time - prevTime;
             }
 
+            if (type.equals("start")) {
+                stack.push(functionId);
+                prevTime = time;
+            } else {
+                // End of current function, add 1 extra unit for inclusive end time
+                result[stack.pop()] += 1;
+                prevTime = time + 1;
+            }
         }
-        return ans;
+
+        return result;
     }
 }
