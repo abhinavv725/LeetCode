@@ -1,19 +1,33 @@
 class Solution {
-    public int longestStrChain(String[] words) {
-        HashMap<String, Integer> dp = new HashMap<>();
-        Arrays.sort(words, (a, b) -> a.length()- b.length());
-        int res=0;
+    HashMap<String, Integer> map = new HashMap<>();
+    HashMap<String, Integer> dp = new HashMap<>();
+    int ans= 0;
 
-        for(String word: words){
-            int best=0;
-            for(int i=0;i<word.length();i++){
-                String prev = word.substring(0, i)+word.substring(i+1, word.length());
-                best = Math.max(best, dp.getOrDefault(prev, 0)+1);
-            }
-            dp.put(word, best);
-            res=Math.max(res, best);
+    private int dfs(int i, String[] words){
+        String w = words[i];
+        int len=1;
+        if(dp.containsKey(w)){
+            return dp.get(w);
         }
+        for(int j=0;j<w.length();j++){
+            String n = w.substring(0, j) + w.substring(j+1, w.length());
+            if(map.containsKey(n)){
+                len = Math.max(len, 1+dfs(map.get(n), words));
+            }
+        }
+        dp.put(w, len);
+        return len;
+    }
 
-        return res;
+    public int longestStrChain(String[] words) {
+        for(int i=0;i<words.length;i++){
+            map.put(words[i], i);
+        }
+        int temp=0;
+        for(String word: words){
+           temp = Math.max(temp,dfs(map.get(word), words)) ;
+        }
+        return temp;
+
     }
 }
